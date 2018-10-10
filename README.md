@@ -75,6 +75,16 @@ The [https://github.com/erasche/docker-tripal/blob/v3.x/README.md](Docker Tripal
 more details on how to customize your Tripal installation using environment variables and other
 indications within the _docker-compose.yml_ file.
 
+### Customize the Web Docker Image
+
+The [https://github.com/erasche/docker-tripal/blob/v3.x/README.md](Docker Tripal project README) also suggests, in 
+particular, that one can run the docker-compose.yml build from a derived version of the standard docker image 
+provided (i.e. _quay.io/erasche/tripal:v3.x_) by building the "web" service component off a Dockerfile which inherits 
+from the standard image in the usual fashion, using the FROM docker file directive, namely:
+
+    FROM quay.io/erasche/tripal:v3.x
+    # additional RUN, COPY, CMD customizations
+
 ## Customize within the Docker mapped volumes
 
 ### Tripal (Drupal) HTML Site Files
