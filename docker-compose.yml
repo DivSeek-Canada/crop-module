@@ -1,5 +1,20 @@
 # This is a DivSeek Canada customized version of the
-# docker-tripal sample configuration to run a Tripal instance with Docker-Compose.
+# docker-tripal sample configuration to run a Tripal instance with Docker-Compose
+#
+# We assume here that we have created a (host user owned) /Volumes/DivSeekCanada directory
+# with created (but empty) subdirectories 'tripal_sites', 'tripal_private', 'tripal_db' and 'tripal_index'
+#
+# This configuration assumes a Mac OSX kind of "/Volumes/" location, but
+# this value may be adjusted under other operating systems.
+# See https://docs.docker.com/docker-for-mac/osxfs/#namespaces for ideas on how to customize this further (on Mac)
+# or see the corresponding documentation for other operating systems versions of Docker.
+#
+# These (sub)directories will serve as the locations external to the docker containers
+# within which the Tripal instance will store its (meta)data, for easy external backup (and direct access)
+#
+# For example, the /Volumes/DivSeekCanada/tripal_sites directory contains the 'sites' configuration of Tripal (Drupal)
+# which may be iteratively modified to customize the site.
+#
 
 version: '2'
 services:
@@ -10,8 +25,8 @@ services:
         - db:postgres
         - elasticsearch:elasticsearch
       volumes:
-      - ./your/backed/up/dir/tripal_sites:/var/www/html/sites
-      - ./your/backed/up/dir/tripal_private:/var/www/private
+      - /Volumes/DivSeekCanada/tripal_sites:/var/www/html/sites
+      - /Volumes/DivSeekCanada/tripal_private:/var/www/private
       environment:
         UPLOAD_LIMIT: 20M
         MEMORY_LIMIT: 128M
@@ -33,7 +48,9 @@ services:
         - INSTALL_YEAST_DATA=0
         - PGDATA=/var/lib/postgresql/data/
       volumes:
-        - /var/lib/postgresql/data/
+      - /Volumes/DivSeekCanada/tripal_db:/var/lib/postgresql/data/
 
     elasticsearch:
       image: elasticsearch:6.4.2
+      volumes:
+      - /Volumes/DivSeekCanada/tripal_index/:/usr/share/elasticsearch/data

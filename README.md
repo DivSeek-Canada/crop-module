@@ -59,8 +59,9 @@ Once it, you can (for example) change the admin password using 'drush' as follow
 
     root@31d29c26c792:/var/www/html# drush user-password admin --password="your-new-admin-password"
 
+In this manner, can then log in as the "admin" user then the admin dashboard, e.g.
 
+    http://localhost:3000/tripal/admin
 
-
-
+to perhaps apply other customizations.
  
