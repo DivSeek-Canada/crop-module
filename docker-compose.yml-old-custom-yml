@@ -1,10 +1,12 @@
-# This is a sample configuration to run a Tripal instance with Docker-Compose.
+# This is DivSeek Canada configuration to build and run a custom Tripal instance with Docker-Compose.
 
 version: '2'
 services:
 
     web:
-      image: quay.io/erasche/tripal:v3.x
+      # Builds a new image locally to replace the standard Docker image from erasche (for now)
+      # image: quay.io/erasche/tripal:v3.x
+      build: docker-tripal/.
       links:
         - db:postgres
         - elasticsearch:elasticsearch
