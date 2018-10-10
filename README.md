@@ -29,4 +29,38 @@ in later iterations, after every pull from the remote repo, one should update th
 
     git submodule update
 
+# Administering the Docker Tripal Build
+
+Once cloned, the project may be built by Docker Compose. A customized version of the docker-compose.yml file
+is under iterative development in the project root directory, and may be used as a target for the build:
+
+    docker-compose -f /path/to/the/divseek-canada-portal/docker-compose.yml build
+
+After the image is built, it may be run:
+
+    docker-compose -f /path/to/the/divseek-canada-portal/docker-compose.yml up
+
+then stopped:
+
+    docker-compose -f /path/to/the/divseek-canada-portal/docker-compose.yml down
+
+The [https://github.com/erasche/docker-tripal/blob/v3.x/README.md](Docker Tripal project README) provides
+more details on how to customize your Tripal installation using environment variables and other
+indications within the _docker-compose.yml_ file.
+
+While running, you may directly access and manipulate the running Tripal instance by firing up a bash shell session.
+Assuming that your docker image name is something like _"divseek-canada-portal_web_1"_
+then, you can enter it by:
+
+    docker exec -t -i divseek-canada-portal_web_1 /bin/bash
+    root@31d29c26c792:/var/www/html#
+
+Once it, you can (for example) change the admin password using 'drush' as follows:
+
+    root@31d29c26c792:/var/www/html# drush user-password admin --password="your-new-admin-password"
+
+
+
+
+
  
