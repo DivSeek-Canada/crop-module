@@ -54,3 +54,10 @@ services:
       image: elasticsearch:6.4.2
       volumes:
       - /Volumes/DivSeekCanada/tripal_index/:/usr/share/elasticsearch/data
+
+    jbrowse:
+      build: ./jbrowse-docker
+      ports:
+          - "8080:80"
+      volumes:
+      - ./jbrowse-docker/example:/data
