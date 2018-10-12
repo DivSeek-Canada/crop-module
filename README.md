@@ -17,19 +17,24 @@ Some technical notes about the portal system will be compiled on the
 # Working on the Project
 
 This project resides in [this Github project repository](https://github.com/DivSeek-Canada/divseek-canada-portal).
-Note that the project contains an embedded git submodule, which is code from the
-[docker-tripal project v3.x branch](https://github.com/erasche/docker-tripal/tree/v3.x).
 
-Thus, in addition to git cloning the project, i.e.
+First, ensure that you have the git client installed (here again, we assume Ubuntu):
+
+    apt update
+    apt install git
+
+Then, you can clone the project:
 
     git clone https://github.com/DivSeek-Canada/divseek-canada-portal 
-    
-one needs to initialize the submodule, i.e.
+
+Note that the project contains an embedded git submodule, which is code from the
+[docker-tripal project v3.x branch](https://github.com/erasche/docker-tripal/tree/v3.x). 
+Thus, in addition to git cloning the project, you'll need to initialize the submodule, i.e.
 
     cd divseek-canada-portal
     git submodule init
     
-in later iterations, after every pull from the remote repo, one should update the submodule, i.e.
+in later iterations, after every pull or checkout of another branch from the remote repo, you should update the submodule, as follows:
 
     git submodule update
 
