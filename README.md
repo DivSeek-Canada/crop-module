@@ -216,3 +216,42 @@ admin password. I effect, though, any _drush_ command accessible site changes (c
 After setting the **admin** password, the entire Tripal (Drupal) site administration will be accessible at 
 **http://localhost:3000/tripal/admin***, page which provides access to significant global customization options.
  
+# Cloud Deployment
+
+When hosting on a cloud environment such as the OpenStack cloud at Compute Canada, some special configuration is needed.
+
+## Storage for Docker
+
+By default, the Docker image cache (and other metadata) resides under **/var/lib/docker** which will end up being hosted
+on the root volume of a cloud image, which may be relatively modest in size. To avoid "out of file storage" messages, 
+which related to limits in inode and actual byte storage, it is advised that you remap (and copy the default contents
+of) the **/var/lib/docker** directory onto an extra mounted storage volume (configured to be automounted by _fstab_ 
+configuration).
+
+## ElasticSearch
+
+During the creation of the ElasticSearch indexing container in the Docker Tripal system, one may run up against another
+resource limit, reported by the following error message:
+
+    max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]
+
+This solution to this is to run the following on the command line of your Linux system hosting docker:
+
+    sudo sysctl -w vm.max_map_count=262144
+
+To make it persistent, you can add this line:
+
+    vm.max_map_count=262144
+
+in your **/etc/sysctl.conf** file on the host system and run
+
+    sudo sysctl -p
+
+to reload configuration with new value.
+
+## Default Host Name of the Site
+
+To ensure proper resolution of the Tripal/Drupal site files, you should set some parameters in the **docker-compose.xml** 
+file before running it. For example, the base URL of the site should be set:
+
+    BASE_URL: "http://staging.divseekcanada.ca:3000/tripal"
