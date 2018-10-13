@@ -98,7 +98,10 @@ For more examples and ideas, visit:
 
 You will then also need to [install Docker Compose](https://docs.docker.com/compose/install/) alongside Docker on your target Linux operating environment.
 
-Note that under Ubuntu, depending on how it was installed, you may sometimes need to run docker (and docker-compose) as 'sudo'. 
+### Docker under Linux
+
+Note that under Ubuntu, you likely need to do a bit more preparation to avoid having to run docker (and docker-compose) 
+as 'sudo'. See [here](https://docs.docker.com/install/linux/linux-postinstall/) for details on how to fix this.
 
 ## Testing Docker Compose
 
@@ -109,18 +112,46 @@ docker-compose version 1.22.0, build f46880f
 ```
 Note that your particular version and build number may be different than what is shown here. We don't currently expect that docker-compose version differences should have a significant impact on the build, but if in doubt, refer to the release notes of the docker-compose site for advice.
 
-# Administering the Docker Tripal Build
+# Deployment of Tripal using Docker
 
-Once cloned, the project may be built by Docker Compose. A customized version of the docker-compose.yml file
-is under iterative development in the project root directory, and may be used as a target for the build:
+This project is currently designed to deploy Tripal as a Docker deployment. Thus, once cloned, the project may be built 
+by Docker Compose. 
 
-    docker-compose -f /path/to/the/divseek-canada-portal/docker-compose.yml build
+# Configuring the System
 
-After the image is built, it may be run:
+Before buiding the system using Docker Compose, it is important to perhaps make a copy and customize the contents of the 
+**docker-compose.yml** file. 
+
+A mandatory item to review is the location of your data files for the web site, database and (elasticsearch) index, 
+which are specified to be persisted on the host system, external from the Docker containers.
+
+The default project data file assumes a Mac OSX deployment with the **/Volumes** directory as a Mac OSX enabled location 
+for subfolders which can be mapped as Docker 'volumes'.  If you are on Linux, you may need to fix this to point to some
+other location. After changing the paths in the **docker-compose.yml** file, you should create each subdirectory in
+question, and ensure that the user permissions are set to the user account running the docker-compose.yml file.
+
+The four such directories in the default docker-compose.yml file to be fixed accordingly are:
+
+      /Volumes/DivSeekCanada/tripal_sites:/var/www/html/sites
+      /Volumes/DivSeekCanada/tripal_private:/var/www/private
+      /Volumes/DivSeekCanada/tripal_db:/var/lib/postgresql/data/
+      /Volumes/DivSeekCanada/tripal_index/:/usr/share/elasticsearch/data
+
+Note that you should ensure that you have a "large enough" storage volume initialized and mounted to your system,
+upon which to store these directories, and also, the Docker deployment in general.  On a cloud deployment, this 
+may mean adding suitable volume storage. Yourexperience with your data system size will dictate the size of 
+such a volume storage.
+
+## Running the System
+
+The **docker-compose.yml** file, once configured, may be directly run as follows:
 
     docker-compose -f /path/to/the/divseek-canada-portal/docker-compose.yml up
 
-then stopped:
+The first time the docker-compose is run, it will trigger the downloading of the required Docker images,
+from their specified sources:
+
+To stop the docker system, the following may be run:
 
     docker-compose -f /path/to/the/divseek-canada-portal/docker-compose.yml down
 
@@ -185,3 +216,42 @@ admin password. I effect, though, any _drush_ command accessible site changes (c
 After setting the **admin** password, the entire Tripal (Drupal) site administration will be accessible at 
 **http://localhost:3000/tripal/admin***, page which provides access to significant global customization options.
  
+# Cloud Deployment
+
+When hosting on a cloud environment such as the OpenStack cloud at Compute Canada, some special configuration is needed.
+
+## Storage for Docker
+
+By default, the Docker image cache (and other metadata) resides under **/var/lib/docker** which will end up being hosted
+on the root volume of a cloud image, which may be relatively modest in size. To avoid "out of file storage" messages, 
+which related to limits in inode and actual byte storage, it is advised that you remap (and copy the default contents
+of) the **/var/lib/docker** directory onto an extra mounted storage volume (configured to be automounted by _fstab_ 
+configuration).
+
+## ElasticSearch
+
+During the creation of the ElasticSearch indexing container in the Docker Tripal system, one may run up against another
+resource limit, reported by the following error message:
+
+    max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]
+
+This solution to this is to run the following on the command line of your Linux system hosting docker:
+
+    sudo sysctl -w vm.max_map_count=262144
+
+To make it persistent, you can add this line:
+
+    vm.max_map_count=262144
+
+in your **/etc/sysctl.conf** file on the host system and run
+
+    sudo sysctl -p
+
+to reload configuration with new value.
+
+## Default Host Name of the Site
+
+To ensure proper resolution of the Tripal/Drupal site files, you should set some parameters in the **docker-compose.xml** 
+file before running it. For example, the base URL of the site should be set:
+
+    BASE_URL: "http://staging.divseekcanada.ca:3000/tripal"
