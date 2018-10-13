@@ -4,8 +4,11 @@
 # We assume here that we have created a (host user owned) /Volumes/DivSeekCanada directory
 # with created (but empty) subdirectories 'tripal_sites', 'tripal_private', 'tripal_db' and 'tripal_index'
 #
-# This configuration assumes a Mac OSX kind of "/Volumes/" location, but
-# this value may be adjusted under other operating systems.
+# NOTE: This configuration assumes a Mac OSX kind of "/Volumes/" location, but
+# this value may have to be adjusted to point to another location under other operating systems.
+# You should check with the docker documentation of your particular operating system to check
+# whether Docker is restricted to share only specified subdirectories (like "Volumes" under Mac OSX)
+#
 # See https://docs.docker.com/docker-for-mac/osxfs/#namespaces for ideas on how to customize this further (on Mac)
 # or see the corresponding documentation for other operating systems versions of Docker.
 #
