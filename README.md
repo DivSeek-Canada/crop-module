@@ -17,34 +17,141 @@ Some technical notes about the portal system will be compiled on the
 # Working on the Project
 
 This project resides in [this Github project repository](https://github.com/DivSeek-Canada/divseek-canada-portal).
-Note that the project contains an embedded git submodule, which is code from the
-[docker-tripal project v3.x branch](https://github.com/erasche/docker-tripal/tree/v3.x).
 
-Thus, in addition to git cloning the project, i.e.
+First, ensure that you have the git client installed (here again, we assume Ubuntu):
+
+    apt update
+    apt install git
+
+Then, you can clone the project:
 
     git clone https://github.com/DivSeek-Canada/divseek-canada-portal 
-    
-one needs to initialize the submodule, i.e.
+
+Note that the project contains an embedded git submodule, which is code from the
+[docker-tripal project v3.x branch](https://github.com/erasche/docker-tripal/tree/v3.x). 
+Thus, in addition to git cloning the project, you'll need to initialize the submodule, i.e.
 
     cd divseek-canada-portal
     git submodule init
     
-in later iterations, after every pull from the remote repo, one should update the submodule, i.e.
+in later iterations, after every pull or checkout of another branch from the remote repo, you should update the submodule, as follows:
 
     git submodule update
 
-# Administering the Docker Tripal Build
+# Docker Deployment of Tripal
 
-Once cloned, the project may be built by Docker Compose. A customized version of the docker-compose.yml file
-is under iterative development in the project root directory, and may be used as a target for the build:
+The DivSeek Canada portal is being designed to run within a **Docker** container when the application is run on a Linux server or virtual machine. Some preparation is required.
 
-    docker-compose -f /path/to/the/divseek-canada-portal/docker-compose.yml build
+## Installation of Docker
 
-After the image is built, it may be run:
+To run Docker, you'll obviously need to [install Docker first](https://docs.docker.com/engine/installation/) in your target Linux operating environment (bare metal server or virtual machine running Linux).
+
+For our installations, we typically use Ubuntu Linux, for which there is an [Ubuntu-specific docker installation using the repository](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-using-the-repository).
+Note that you should have 'curl' installed first before installing Docker:
+
+```
+$ sudo apt-get install curl
+```
+
+For other installations, please find instructions specific to your choice of Linux variant, on the Docker site.
+
+## Testing Docker
+
+In order to ensure that Docker is working correctly, run the following command:
+
+```
+$ sudo docker run hello-world
+```
+
+This should result in something akin to the following output:
+
+```
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from library/hello-world
+ca4f61b1923c: Pull complete
+Digest: sha256:be0cd392e45be79ffeffa6b05338b98ebb16c87b255f48e297ec7f98e123905c
+Status: Downloaded newer image for hello-world:latest
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://cloud.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/engine/userguide/
+```
+
+## Installing Docker Compose
+
+You will then also need to [install Docker Compose](https://docs.docker.com/compose/install/) alongside Docker on your target Linux operating environment.
+
+### Docker under Linux
+
+Note that under Ubuntu, you likely need to do a bit more preparation to avoid having to run docker (and docker-compose) 
+as 'sudo'. See [here](https://docs.docker.com/install/linux/linux-postinstall/) for details on how to fix this.
+
+## Testing Docker Compose
+
+In order to ensure Docker Compose is working correctly, issue the following command:
+```
+$ docker-compose --version
+docker-compose version 1.22.0, build f46880f
+```
+Note that your particular version and build number may be different than what is shown here. We don't currently expect that docker-compose version differences should have a significant impact on the build, but if in doubt, refer to the release notes of the docker-compose site for advice.
+
+# Deployment of Tripal using Docker
+
+This project is currently designed to deploy Tripal as a Docker deployment. Thus, once cloned, the project may be built 
+by Docker Compose. 
+
+# Configuring the System
+
+Before buiding the system using Docker Compose, it is important to perhaps make a copy and customize the contents of the 
+**docker-compose.yml** file. 
+
+A mandatory item to review is the location of your data files for the web site, database and (elasticsearch) index, 
+which are specified to be persisted on the host system, external from the Docker containers.
+
+The default project data file assumes a Mac OSX deployment with the **/Volumes** directory as a Mac OSX enabled location 
+for subfolders which can be mapped as Docker 'volumes'.  If you are on Linux, you may need to fix this to point to some
+other location. After changing the paths in the **docker-compose.yml** file, you should create each subdirectory in
+question, and ensure that the user permissions are set to the user account running the docker-compose.yml file.
+
+The four such directories in the default docker-compose.yml file to be fixed accordingly are:
+
+      /Volumes/DivSeekCanada/tripal_sites:/var/www/html/sites
+      /Volumes/DivSeekCanada/tripal_private:/var/www/private
+      /Volumes/DivSeekCanada/tripal_db:/var/lib/postgresql/data/
+      /Volumes/DivSeekCanada/tripal_index/:/usr/share/elasticsearch/data
+
+Note that you should ensure that you have a "large enough" storage volume initialized and mounted to your system,
+upon which to store these directories, and also, the Docker deployment in general.  On a cloud deployment, this 
+may mean adding suitable volume storage. Yourexperience with your data system size will dictate the size of 
+such a volume storage.
+
+## Running the System
+
+The **docker-compose.yml** file, once configured, may be directly run as follows:
 
     docker-compose -f /path/to/the/divseek-canada-portal/docker-compose.yml up
 
-then stopped:
+The first time the docker-compose is run, it will trigger the downloading of the required Docker images,
+from their specified sources:
+
+To stop the docker system, the following may be run:
 
     docker-compose -f /path/to/the/divseek-canada-portal/docker-compose.yml down
 
@@ -109,3 +216,42 @@ admin password. I effect, though, any _drush_ command accessible site changes (c
 After setting the **admin** password, the entire Tripal (Drupal) site administration will be accessible at 
 **http://localhost:3000/tripal/admin***, page which provides access to significant global customization options.
  
+# Cloud Deployment
+
+When hosting on a cloud environment such as the OpenStack cloud at Compute Canada, some special configuration is needed.
+
+## Storage for Docker
+
+By default, the Docker image cache (and other metadata) resides under **/var/lib/docker** which will end up being hosted
+on the root volume of a cloud image, which may be relatively modest in size. To avoid "out of file storage" messages, 
+which related to limits in inode and actual byte storage, it is advised that you remap (and copy the default contents
+of) the **/var/lib/docker** directory onto an extra mounted storage volume (configured to be automounted by _fstab_ 
+configuration).
+
+## ElasticSearch
+
+During the creation of the ElasticSearch indexing container in the Docker Tripal system, one may run up against another
+resource limit, reported by the following error message:
+
+    max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]
+
+This solution to this is to run the following on the command line of your Linux system hosting docker:
+
+    sudo sysctl -w vm.max_map_count=262144
+
+To make it persistent, you can add this line:
+
+    vm.max_map_count=262144
+
+in your **/etc/sysctl.conf** file on the host system and run
+
+    sudo sysctl -p
+
+to reload configuration with new value.
+
+## Default Host Name of the Site
+
+To ensure proper resolution of the Tripal/Drupal site files, you should set some parameters in the **docker-compose.xml** 
+file before running it. For example, the base URL of the site should be set:
+
+    BASE_URL: "http://staging.divseekcanada.ca:3000/tripal"

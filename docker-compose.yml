@@ -1,42 +1,60 @@
-# This is a DivSeek Canada customized version of the
-# docker-tripal sample configuration to run a Tripal instance with Docker-Compose
+# This is a DivSeek Canada customized version of the docker-tripal sample configuration 
+# to run a Tripal instance with Docker-Compose
 #
-# We assume here that we have created a (host user owned) /Volumes/DivSeekCanada directory
-# with created (but empty) subdirectories 'tripal_sites', 'tripal_private', 'tripal_db' and 'tripal_index'
+# (Meta)Data Persistance
+# ======================
 #
-# This configuration assumes a Mac OSX kind of "/Volumes/" location, but
-# this value may be adjusted under other operating systems.
-# See https://docs.docker.com/docker-for-mac/osxfs/#namespaces for ideas on how to customize this further (on Mac)
-# or see the corresponding documentation for other operating systems versions of Docker.
+# NOTE: to allow the Tripal instance to store its (meta)data outside of its running containers, 
+# thus assuring persistence between container runs, easy external backup and direct programmatic 
+# access, this docker-compose.yml file configures a series of Docker "volumes" tagged mappings
+# of (sub)directories that will serve as such host system locations.
 #
-# These (sub)directories will serve as the locations external to the docker containers
-# within which the Tripal instance will store its (meta)data, for easy external backup (and direct access)
+# Here, we assume here that the existence of the following (host user owned) /Volumes/DivSeekCanada 
+# root directory,  with created (but empty) subdirectories: 'tripal_sites', 'tripal_private', 
+# 'tripal_db', 'tripal_index' and 'jbrowse'.
 #
-# For example, the /Volumes/DivSeekCanada/tripal_sites directory contains the 'sites' configuration of Tripal (Drupal)
-# which may be iteratively modified to customize the site.
+# For example, the /Volumes/DivSeekCanada/tripal_sites directory contains the 'sites' configuration 
+# of the Tripal (Drupal), which may be directly modified to customize the site (although one should
+# carefully consider whether such modifications may best belong directly in dockerfile provisioning).
 #
-
-version: '2'
+# NOTE: This configuration assumes a standard Mac OSX root directory location  "/Volumes/".  This value
+# reflects the fact that Mac OSX has Docker share access restrictions which, unless reset, are 
+# permissive only for locations (like '/Volumes/'). This value likely ought to point to another 
+# location under another operating systems (e.g. '/opt/DivSeekCanada/' under Linux?).
+#
+# See https://docs.docker.com/docker-for-mac/osxfs/#namespaces for ideas on how to customize this further 
+# under Mac OSX or review with the docker documentation of your particular operating system to check
+# Docker access restrictions and configurations on your target host system.
+#
+# Application Port Visibility
+# ===========================
+#
+# We've mapped the web sites - core and jbrowse - to TCP/IP ports 8082 and 8084, respectively. 
+# These are ports not publicly reserved for any other software product.
+#
+version: '3'
 services:
 
     web:
       image: quay.io/erasche/tripal:v3.x
-      links:
-        - db:postgres
-        - elasticsearch:elasticsearch
       volumes:
       - /Volumes/DivSeekCanada/tripal_sites:/var/www/html/sites
       - /Volumes/DivSeekCanada/tripal_private:/var/www/private
       environment:
         UPLOAD_LIMIT: 20M
         MEMORY_LIMIT: 128M
-        BASE_URL: "http://localhost:3000/tripal"
+        BASE_URL: "http://staging.divseekcanada.ca:3000/tripal"
         BASE_URL_PROTO: "http://"
         DB_NAME: 'postgres'
         SITE_NAME: "DivSeek Canada"
         THEME: "garland"
       ports:
-        - "3000:80"
+        - "8082:80"
+      depends_on:
+      - db
+      - elasticsearch
+      networks:
+      - default
 
     db:
       image: erasche/chado:1.31-jenkins97-pg9.5
@@ -49,15 +67,29 @@ services:
         - PGDATA=/var/lib/postgresql/data/
       volumes:
       - /Volumes/DivSeekCanada/tripal_db:/var/lib/postgresql/data/
+      networks:
+        default:
+          aliases:
+          - postgres
 
     elasticsearch:
-      image: elasticsearch:6.4.2
+      image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
+      environment:
+        TAKE_FILE_OWNERSHIP: "true"
       volumes:
       - /Volumes/DivSeekCanada/tripal_index/:/usr/share/elasticsearch/data
+      networks:
+      - default
 
     jbrowse:
       build: ./jbrowse-docker
       ports:
-          - "8080:80"
+          - "8084:80"
       volumes:
-      - ./jbrowse-docker/example:/data
+      - /Volumes/DivSeekCanada/jbrowse/:/data
+      networks:
+      - default
+      
+networks:
+  default:
+    driver: bridge
