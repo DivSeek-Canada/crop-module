@@ -1,17 +1,22 @@
 # This script will apply additional DivSeek Canada site configuration to the Tripal / Drupal site
 
 echo "Applying additional DivSeek Canada configuration to the Tripal / Drupal web site"
+
+echo "Setting the site logo to DivSeek Canada"
+cp /DivSeekCanadaLogo.png /var/www/html/sites/all/themes/bootstrap/logo.png
+
 #
 # Adding Bootswatch themes to the Bootstrap theme (eventually...)
 #
 : ${BOOTSWATCH_THEME:='flatly'}
-echo "Installing Bootswatch theme: ${BOOTSWATCH_THEME}"
+: ${BOOTSTRAP_CSS:='/var/www/html/sites/all/themes/bootstrap/css'}
+echo "STUB Installing Bootswatch theme: ${BOOTSWATCH_THEME} into ${BOOTSTRAP_CSS} "
 #
-# RUN wget https://bootswatch.com/4/${BOOTSWATCH_THEME}/bootstrap.min.css \
-#          -O /var/www/html/sites/all/themes/bootstrap/files/styles/bootstrap.min.css \
-# && wget https://bootswatch.com/4/${BOOTSWATCH_THEME}/bootstrap.css \
-#         -O /var/www/html/sites/all/themes/bootstrap/files/styles/bootstrap.css \
-# && wget https://bootswatch.com/4/${BOOTSWATCH_THEME}/_variables.css \
-#         -O /var/www/html/sites/all/themes/bootstrap/files/styles/_variables.css \
-# && wget https://bootswatch.com/4/${BOOTSWATCH_THEME}/_bootswatch.css \
-#         -O /var/www/html/sites/all/themes/bootstrap/files/styles/_bootswatch.css
+# wget "https://bootswatch.com/4/${BOOTSWATCH_THEME}/bootstrap.min.css" \
+#          -O "${BOOTSTRAP_CSS}/bootstrap.min.css" \
+# wget "https://bootswatch.com/4/${BOOTSWATCH_THEME}/bootstrap.css" \
+#         -O "${BOOTSTRAP_CSS}/bootstrap.css" \
+# wget "https://bootswatch.com/4/${BOOTSWATCH_THEME}/_variables.css" \
+#         -O "${BOOTSTRAP_CSS}/_variables.css" \
+# wget "https://bootswatch.com/4/${BOOTSWATCH_THEME}/_bootswatch.css" \
+#         -O "${BOOTSTRAP_CSS}/_bootswatch.css"
