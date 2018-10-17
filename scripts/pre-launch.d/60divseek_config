@@ -1,0 +1,17 @@
+# This script will apply additional DivSeek Canada site configuration to the Tripal / Drupal site
+
+echo "Applying additional DivSeek Canada configuration to the Tripal / Drupal web site"
+#
+# Adding Bootswatch themes to the Bootstrap theme (eventually...)
+#
+: ${BOOTSWATCH_THEME:='flatly'}
+echo "Installing Bootswatch theme: ${BOOTSWATCH_THEME}"
+#
+# RUN wget https://bootswatch.com/4/${BOOTSWATCH_THEME}/bootstrap.min.css \
+#          -O /var/www/html/sites/all/themes/bootstrap/files/styles/bootstrap.min.css \
+# && wget https://bootswatch.com/4/${BOOTSWATCH_THEME}/bootstrap.css \
+#         -O /var/www/html/sites/all/themes/bootstrap/files/styles/bootstrap.css \
+# && wget https://bootswatch.com/4/${BOOTSWATCH_THEME}/_variables.css \
+#         -O /var/www/html/sites/all/themes/bootstrap/files/styles/_variables.css \
+# && wget https://bootswatch.com/4/${BOOTSWATCH_THEME}/_bootswatch.css \
+#         -O /var/www/html/sites/all/themes/bootstrap/files/styles/_bootswatch.css
