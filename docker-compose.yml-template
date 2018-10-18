@@ -103,13 +103,13 @@ services:
       volumes:
       # External Postgresql volume mapping - select for your given OS (see comments above)
       #
-      # Sample Volume mappings for Linux
+      # Sample Volume mapping for Linux
       - /opt/DivSeekCanada/tripal_db:/var/lib/postgresql/data/
       #
-      # Sample Volume mappings for MacOSX
+      # Sample Volume mapping for MacOSX
       #- /Volumes/DivSeekCanada/tripal_db:/var/lib/postgresql/data/
       #
-      # for Docker for Windows, use the following 'named volume' alternative to a Docker 'bind mount'
+      # For Docker for Windows, use the following 'named volume' alternative to a Docker 'bind mount'
       # Also need to uncomment the corresponding named volume declaration at the bottom of the file
       #- data-postgresql:/var/lib/postgresql/data/
 
@@ -120,13 +120,13 @@ services:
       volumes:
       # External elastic search index volume mappings - select for your given OS (see comments above)
       #
-      # Sample Volume mappings for Linux
+      # Sample Volume mapping for Linux
       - /opt/DivSeekCanada/tripal_index/:/usr/share/elasticsearch/data
       #
-      # Sample Volume mappings for MacOSX
+      # Sample Volume mapping for MacOSX
       #- /Volumes/DivSeekCanada/tripal_index/:/usr/share/elasticsearch/data
       #
-      # Sample Volume mappings for Windows
+      # Sample Volume mapping for Windows
       #- C:\DivSeekCanada\tripal_index/:/usr/share/elasticsearch/data
 
     jbrowse:
@@ -134,7 +134,16 @@ services:
       ports:
           - "8084:80"
       volumes:
-      - /Volumes/DivSeekCanada/jbrowse/:/data
+      # External jbrowse volume mappings - select for your given OS (see comments above)
+      #
+      # Sample Volume mapping for Linux
+      - /opt/DivSeekCanada/jbrowse/:/data
+      #
+      # Sample Volume mapping for MacOSX
+      #- /Volumes/DivSeekCanada/jbrowse/:/data
+      #
+      # Sample Volume mapping for Windows
+      #- C:\DivSeekCanada\jbrowse/:/data
 
 # Named volume declaration for postgres, for use under "Docker for Windows" - uncomment if needed
 #volumes:

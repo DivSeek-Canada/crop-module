@@ -119,27 +119,31 @@ by Docker Compose.
 
 # Configuring the System
 
-Before buiding the system using Docker Compose, it is important to perhaps make a copy and customize the contents of the 
-**docker-compose.yml** file. 
+Before building the system using Docker Compose, you need to copy the contents of the **docker-compose.yml-template** 
+file into **docker-compose.yml" which you will customize for your site (and which will be _.gitignored_). 
 
-A mandatory item to review is the location of your data files for the web site, database and (elasticsearch) index, 
-which are specified to be persisted on the host system, external from the Docker containers.
+A mandatory item to review (and configure appropriately for your system) is the location of your data files for the 
+web site, database, (elastic search) index and jbrowse, which are specified to be persisted on the host system, 
+external from the Docker containers.
 
-The default project data file assumes a Mac OSX deployment with the **/Volumes** directory as a Mac OSX enabled location 
-for subfolders which can be mapped as Docker 'volumes'.  If you are on Linux, you may need to fix this to point to some
-other location. After changing the paths in the **docker-compose.yml** file, you should create each subdirectory in
-question, and ensure that the user permissions are set to the user account running the docker-compose.yml file.
+The default template file assumes a Linux deployment with the **/opt** directory as a Linux enabled shared 
+directory location which can be mapped as a Docker 'volume'.  If you are on MacOS or Windows, you will need to fix 
+this to point to some other location (commented examples are provided in the docker-compose.yml file). After fixing
+the paths in the **docker-compose.yml** file, note that you need to create some additional (empty)subdirectories
+and ensure that the user permissions are set to the user account running the docker-compose.yml file.
+In particular, these subdirectories are:
 
-The four such directories in the default docker-compose.yml file to be fixed accordingly are:
+      /opt/DivSeekCanada/tripal_sites:/var/www/html/sites
+      /opt/DivSeekCanada/tripal_private:/var/www/private
+      /opt/DivSeekCanada/tripal_db:/var/lib/postgresql/data/
+      /opt/DivSeekCanada/tripal_index/:/usr/share/elasticsearch/data
+      /opt/DivSeekCanada/jbrowse/:/data
 
-      /Volumes/DivSeekCanada/tripal_sites:/var/www/html/sites
-      /Volumes/DivSeekCanada/tripal_private:/var/www/private
-      /Volumes/DivSeekCanada/tripal_db:/var/lib/postgresql/data/
-      /Volumes/DivSeekCanada/tripal_index/:/usr/share/elasticsearch/data
+(substitute the appropriate root path for your OS).
 
 Note that you should ensure that you have a "large enough" storage volume initialized and mounted to your system,
 upon which to store these directories, and also, the Docker deployment in general.  On a cloud deployment, this 
-may mean adding suitable volume storage. Yourexperience with your data system size will dictate the size of 
+may mean adding suitable volume storage. Your experience with your data system size will dictate the size of 
 such a volume storage.
 
 ## Running the System
