@@ -9,35 +9,47 @@
 # access, this docker-compose.yml file configures a series of Docker 'bind mounted' "volumes"
 # of (sub)directories that will serve as such host system locations.
 #
-# Here, we assume here that the existence of the following (host user owned) /Volumes/DivSeekCanada 
-# root directory,  with created (but empty) subdirectories: 'tripal_sites', 'tripal_private', 
-# 'tripal_db', 'tripal_index' and 'jbrowse'.
+# Here, we assume here that the existence of a (host-user-owned) /somepath/DivSeekCanada
+# root directory,  where 'some-path' varies depending on host operating system, i.e.
 #
-# For example, the /Volumes/DivSeekCanada/tripal_sites directory contains the 'sites' configuration 
-# of the Tripal (Drupal), which may be directly modified to customize the site (although one should
-# carefully consider whether such modifications may best belong directly in dockerfile provisioning).
+#   "/Volumes" for Mac OSX
+#   "/opt" for Linux
+#   "C:\"
 #
-# NOTE: This configuration assumes a standard Mac OSX root directory location  "/Volumes/".  This value
-# reflects the fact that Mac OSX has Docker share access restrictions which, unless reset, are 
-# permissive only for locations (like '/Volumes/'). This value likely ought to point to another 
-# location under another operating systems (e.g. '/opt/DivSeekCanada/' under Linux?). To set this up
-# for Linux and Windows, you may also need to change Docker Settings..Shared Drives configuration.
-# For Windows, the sharing is only at the level of the disk drive letter. If you need finer grained
-# control of access, you could create additional logical drive mappings.
+# You can, of course, set the root directory to wherever you wish.
+# Under this root directory, the following (initially empty) subdirectories should be created:
 #
-# See https://docs.docker.com/docker-for-mac/osxfs/#namespaces for ideas on how to customize this further 
+#   'tripal_sites', 'tripal_private', 'tripal_db', 'tripal_index' and 'jbrowse'.
+#
+# For example, the /Volumes/DivSeekCanada/tripal_sites is the Mac OSX directory mapped onto
+# the 'sites' configuration directory of the Tripal (Drupal), which may, in principle, be
+# directly modified to customize the site (although one should carefully consider whether such
+# modifications may best belong directly in dockerfile provisioning or with the Drupal drush script).
+#
+# NOTE: The root configuration assumes a standard Docker shared root directory.  This value will
+# reflect the fact that Docker has share access restrictions which, unless reset, are
+# permissive only for locations (like '/Volumes/' which is shared "by default" in Mac OSX).
+#
+# See https://docs.docker.com/docker-for-mac/osxfs/#namespaces for ideas on how to customize this further
 # under Mac OSX or review with the docker documentation of your particular operating system to check
 # Docker access restrictions and configurations on your target host system.
 #
+# This value likely needs to be explicitly 'shared' to point to another location under
+# another operating systems (e.g. '/opt/DivSeekCanada/' under Linux?). To set this up
+# for Linux and Windows, you may also need to change Docker *Settings..Shared Drives*
+# configuration menu. Note that, for Docker for Windows, sharing is only feasible at
+# the level of the disk drive letter. If you need finer grained control of access,
+# you could create additional Windows logical drive mappings.
+#
 # DOCKER FOR WINDOWS ISSUES
-# ==================
+# =========================
 # Due to the particular way that Postgres operations and Docker for Windows,
 # a 'bind mount' Docker volume cannot be used without an access error:
 #
 # "...FATAL:  data directory "/var/lib/postgresql/data/pgdata" has wrong ownership
 #   HINT:  The server must be started by the user that owns the data directory..."
 #
-# The workaround is to use a "named volume"
+# The workaround is to use a "named volume" for Windows
 #
 # Application Port Visibility
 # ===========================
@@ -51,8 +63,19 @@ services:
     web:
       build: .
       volumes:
-      - /Volumes/DivSeekCanada/tripal_sites:/var/www/html/sites
-      - /Volumes/DivSeekCanada/tripal_private:/var/www/private
+      # External web site volume mappings - select for your given OS (see comments above)
+      #
+      # Sample Volume mappings for Linux
+      - /opt/DivSeekCanada/tripal_sites:/var/www/html/sites
+      - /opt/DivSeekCanada/tripal_private:/var/www/private
+      #
+      # Sample Volume mappings for MacOSX
+      #- /Volumes/DivSeekCanada/tripal_sites:/var/www/html/sites
+      #- /Volumes/DivSeekCanada/tripal_private:/var/www/private
+      #
+      # Sample Volume mappings for Windows
+      #- C:\DivSeekCanada\tripal_sites:/var/www/html/sites
+      #- C:\DivSeekCanada\tripal_private:/var/www/private
       environment:
         UPLOAD_LIMIT: 20M
         MEMORY_LIMIT: 128M
@@ -60,7 +83,7 @@ services:
         BASE_URL_PROTO: "http://"
         DB_NAME: 'postgres'
         SITE_NAME: "DivSeek Canada"
-        TRIPAL_ADDITIONAL_MODULES: "bootstrap jquery_update panels"
+        TRIPAL_ADDITIONAL_MODULES: "bootstrap jquery_update panels tripal_jbrowse"
         THEME: "bootstrap"
       ports:
         - "8082:80"
@@ -78,9 +101,16 @@ services:
         - INSTALL_YEAST_DATA=0
         - PGDATA=/var/lib/postgresql/data/
       volumes:
-      # Docker named volume for Postgres under Mac (similar under Linux)
-      - /Volumes/DivSeekCanada/tripal_db:/var/lib/postgresql/data/
-      # Docker for Windows 'named volume' alternative to a Docker 'bind mount'
+      # External Postgresql volume mapping - select for your given OS (see comments above)
+      #
+      # Sample Volume mappings for Linux
+      - /opt/DivSeekCanada/tripal_db:/var/lib/postgresql/data/
+      #
+      # Sample Volume mappings for MacOSX
+      #- /Volumes/DivSeekCanada/tripal_db:/var/lib/postgresql/data/
+      #
+      # for Docker for Windows, use the following 'named volume' alternative to a Docker 'bind mount'
+      # Also need to uncomment the corresponding named volume declaration at the bottom of the file
       #- data-postgresql:/var/lib/postgresql/data/
 
     elasticsearch:
@@ -88,7 +118,16 @@ services:
       environment:
         TAKE_FILE_OWNERSHIP: "true"
       volumes:
-      - /Volumes/DivSeekCanada/tripal_index/:/usr/share/elasticsearch/data
+      # External elastic search index volume mappings - select for your given OS (see comments above)
+      #
+      # Sample Volume mappings for Linux
+      - /opt/DivSeekCanada/tripal_index/:/usr/share/elasticsearch/data
+      #
+      # Sample Volume mappings for MacOSX
+      #- /Volumes/DivSeekCanada/tripal_index/:/usr/share/elasticsearch/data
+      #
+      # Sample Volume mappings for Windows
+      #- C:\DivSeekCanada\tripal_index/:/usr/share/elasticsearch/data
 
     jbrowse:
       build: ./jbrowse-docker
@@ -97,6 +136,6 @@ services:
       volumes:
       - /Volumes/DivSeekCanada/jbrowse/:/data
 
-# Named volume for postgres, for use under "Docker for Windows"
+# Named volume declaration for postgres, for use under "Docker for Windows" - uncomment if needed
 #volumes:
 #  data-postgresql:
