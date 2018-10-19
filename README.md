@@ -121,10 +121,12 @@ by Docker Compose.
 
 The **docker-compose.yml** file, once configured, may be directly run as follows:
 
-    docker-compose -f /path/to/the/divseek-canada-portal/docker-compose.yml up
+    docker-compose -f /path/to/the/divseek-canada-portal/docker-compose.yml up --build
 
-The first time the docker-compose is run, it will trigger the downloading of the required Docker images,
-from their specified sources:
+The use of the **--build** flag reflects the fact that the docker compose builds a few "derivative" docker images 
+that it customizes for DivSeek Canada specific needs. first time the docker-compose is run, it will trigger the 
+downloading of the required docker images, from their specified sources. Note that if you are in the project directory,
+then use use of the -f flag argument is optional (since the docker-compose command defaults to use 'docker-compose.yml).
 
 To stop the docker system, the following may be run:
 
