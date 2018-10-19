@@ -72,7 +72,6 @@ services:
     build: ./docker-jbrowse
     ports:
     - "8084:80"
-    #command: /bin/bash -c "exec nginx -g 'daemon off;'"
     volumes:
     # External jbrowse volume mapping
     # NOTE: This first iteration hard codes a connection to the 'example' data in the project

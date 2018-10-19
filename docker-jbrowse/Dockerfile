@@ -27,5 +27,10 @@ RUN rm -rf /usr/share/nginx/html && ln -s /jbrowse/ /usr/share/nginx/html
 RUN echo "include += data/datasets.conf" >> /jbrowse/jbrowse.conf
 
 VOLUME /data
+
 COPY docker-entrypoint.sh /
+
+# We explicitly set the script file permissions to be sure...
+RUN chmod ugo+x /docker-entrypoint.sh
+
 CMD ["/docker-entrypoint.sh"]
