@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "Running the 'docker-jbrowse/docker-entrypoint.sh' script"
 export JBROWSE_SAMPLE_DATA=/jbrowse/sample_data/
 export JBROWSE_DATA=/jbrowse/data/
 export JBROWSE=/jbrowse/
@@ -13,4 +14,5 @@ fi
 
 mkdir -p $JBROWSE_DATA/json/
 
-nginx -g "daemon off;"
+echo "Running the NGINX web browser now..."
+exec nginx -g "daemon off;"

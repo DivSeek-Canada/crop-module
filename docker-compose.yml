@@ -1,102 +1,89 @@
-# This is a DivSeek Canada customized version of the docker-tripal sample configuration 
-# to run a Tripal instance with Docker-Compose
+# This is a DivSeek Canada customized version of the docker-tripal
+# sample configuration to run a Tripal instance with Docker-Compose
 #
-# (Meta)Data Persistance
+# (Meta)Data Persistence
 # ======================
 #
-# NOTE: to allow the Tripal instance to store its (meta)data outside of its running containers, 
-# thus assuring persistence between container runs, easy external backup and direct programmatic 
-# access, this docker-compose.yml file configures a series of Docker 'bind mounted' "volumes"
-# of (sub)directories that will serve as such host system locations.
+# NOTE: to allow the Tripal instance to store its (meta)data outside of its running containers,
+# thus assuring persistence between container runs, this docker-compose.yml file configures
+# a series of Docker 'named' "volumes". These are stored under the Docker installation directory.
 #
-# Here, we assume here that the existence of the following (host user owned) /Volumes/DivSeekCanada 
-# root directory,  with created (but empty) subdirectories: 'tripal_sites', 'tripal_private', 
-# 'tripal_db', 'tripal_index' and 'jbrowse'.
+# One can use the CLI command:
 #
-# For example, the /Volumes/DivSeekCanada/tripal_sites directory contains the 'sites' configuration 
-# of the Tripal (Drupal), which may be directly modified to customize the site (although one should
-# carefully consider whether such modifications may best belong directly in dockerfile provisioning).
+#         docker exec -i -t <container_name> /bin/bash
 #
-# NOTE: This configuration assumes a standard Mac OSX root directory location  "/Volumes/".  This value
-# reflects the fact that Mac OSX has Docker share access restrictions which, unless reset, are 
-# permissive only for locations (like '/Volumes/'). This value likely ought to point to another 
-# location under another operating systems (e.g. '/opt/DivSeekCanada/' under Linux?). To set this up
-# for Linux and Windows, you may also need to change Docker Settings..Shared Drives configuration.
-# For Windows, the sharing is only at the level of the disk drive letter. If you need finer grained
-# control of access, you could create additional logical drive mappings.
+# to directly log into each container to access data attached to each volume.
 #
-# See https://docs.docker.com/docker-for-mac/osxfs/#namespaces for ideas on how to customize this further 
-# under Mac OSX or review with the docker documentation of your particular operating system to check
-# Docker access restrictions and configurations on your target host system.
-#
-# DOCKER FOR WINDOWS ISSUES
-# ==================
-# Due to the particular way that Postgres operations and Docker for Windows,
-# a 'bind mount' Docker volume cannot be used without an access error:
-#
-# "...FATAL:  data directory "/var/lib/postgresql/data/pgdata" has wrong ownership
-#   HINT:  The server must be started by the user that owns the data directory..."
-#
-# The workaround is to use a "named volume"
+# Later iterations of this project may add additional services to facilitate access to, and backup of, these volumes.
 #
 # Application Port Visibility
 # ===========================
 #
-# We've mapped the web sites - core and jbrowse - to TCP/IP ports 8082 and 8084, respectively. 
-# These are ports not publicly reserved for any other software product.
+# We've chosen to map the web sites - core and jbrowse - to TCP/IP ports 8082 and 8084, respectively.
+# These ports are currently not publicly reserved for any other software product in the world.
 #
 version: '3'
 services:
 
-    web:
-      build: .
-      volumes:
-      - /Volumes/DivSeekCanada/tripal_sites:/var/www/html/sites
-      - /Volumes/DivSeekCanada/tripal_private:/var/www/private
-      environment:
-        UPLOAD_LIMIT: 20M
-        MEMORY_LIMIT: 128M
-        BASE_URL: "http://staging.divseekcanada.ca:8082/tripal"
-        BASE_URL_PROTO: "http://"
-        DB_NAME: 'postgres'
-        SITE_NAME: "DivSeek Canada"
-        TRIPAL_ADDITIONAL_MODULES: "bootstrap jquery_update panels"
-        THEME: "bootstrap"
-      ports:
-        - "8082:80"
-      depends_on:
-      - postgres
-      - elasticsearch
+  web:
+    build: .
+    volumes:
+    # External web site volume mappings
+    - tripal_sites:/var/www/html/sites
+    - tripal_private:/var/www/private
+    environment:
+      UPLOAD_LIMIT: 20M
+      MEMORY_LIMIT: 128M
+      BASE_URL: "http://staging.divseekcanada.ca:8082/tripal"
+      BASE_URL_PROTO: "http://"
+      DB_NAME: 'postgres'
+      SITE_NAME: "DivSeek Canada"
+      TRIPAL_ADDITIONAL_MODULES: "bootstrap jquery_update panels tripal_jbrowse"
+      THEME: "bootstrap"
+    ports:
+    - "8082:80"
+    depends_on:
+    - postgres
+    - elasticsearch
+    - jbrowse
 
-    postgres:
-      image: erasche/chado:1.31-jenkins97-pg9.5
-      environment:
-        - POSTGRES_PASSWORD=postgres
-          # The default chado image would try to install the schema on first run,
-          # we just want the tools to be available.
-        - INSTALL_CHADO_SCHEMA=0
-        - INSTALL_YEAST_DATA=0
-        - PGDATA=/var/lib/postgresql/data/
-      volumes:
-      # Docker named volume for Postgres under Mac (similar under Linux)
-      - /Volumes/DivSeekCanada/tripal_db:/var/lib/postgresql/data/
-      # Docker for Windows 'named volume' alternative to a Docker 'bind mount'
-      #- data-postgresql:/var/lib/postgresql/data/
+  postgres:
+    image: erasche/chado:1.31-jenkins97-pg9.5
+    environment:
+    - POSTGRES_PASSWORD=postgres
+    # The default chado image would try to install the schema on first run,
+    # we just want the tools to be available.
+    - INSTALL_CHADO_SCHEMA=0
+    - INSTALL_YEAST_DATA=0
+    - PGDATA=/var/lib/postgresql/data/
+    volumes:
+    # External Postgresql volume mapping
+    - tripal_db:/var/lib/postgresql/data/
 
-    elasticsearch:
-      image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
-      environment:
-        TAKE_FILE_OWNERSHIP: "true"
-      volumes:
-      - /Volumes/DivSeekCanada/tripal_index/:/usr/share/elasticsearch/data
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
+    environment:
+      TAKE_FILE_OWNERSHIP: "true"
+    volumes:
+    # External elastic search index volume mappings
+    - tripal_index:/usr/share/elasticsearch/data
 
-    jbrowse:
-      build: ./jbrowse-docker
-      ports:
-          - "8084:80"
-      volumes:
-      - /Volumes/DivSeekCanada/jbrowse/:/data
+  jbrowse:
+    build: ./docker-jbrowse
+    ports:
+    - "8084:80"
+    #command: /bin/bash -c "exec nginx -g 'daemon off;'"
+    volumes:
+    # External jbrowse volume mapping
+    # NOTE: This first iteration hard codes a connection to the 'example' data in the project
+    #       We actually need to devise a more flexible data loading process here, one in which
+    #       the JBrowse system may start out empty, but have some data loading triggered later
+    #       either in a declarative fashion (by a configuration file) or by a web form request.
+    - ./docker-jbrowse/example/:/data/
 
-# Named volume for postgres, for use under "Docker for Windows"
-#volumes:
-#  data-postgresql:
+volumes:
+  tripal_sites:
+  tripal_private:
+  tripal_db:
+  tripal_index:
+  #tripal_jbrowse:
