@@ -30,7 +30,4 @@ VOLUME /data
 
 COPY docker-entrypoint.sh /
 
-# We explicitly set the script file permissions to be sure...
-RUN chmod ugo+x /docker-entrypoint.sh
-
-CMD ["/docker-entrypoint.sh"]
+CMD ["/bin/bash","/docker-entrypoint.sh"]
