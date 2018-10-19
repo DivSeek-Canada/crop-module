@@ -117,35 +117,6 @@ Note that your particular version and build number may be different than what is
 This project is currently designed to deploy Tripal as a Docker deployment. Thus, once cloned, the project may be built 
 by Docker Compose. 
 
-# Configuring the System
-
-Before building the system using Docker Compose, you need to copy the contents of the **docker-compose.yml-template** 
-file into **docker-compose.yml" which you will customize for your site (and which will be _.gitignored_). 
-
-A mandatory item to review (and configure appropriately for your system) is the location of your data files for the 
-web site, database, (elastic search) index and jbrowse, which are specified to be persisted on the host system, 
-external from the Docker containers.
-
-The default template file assumes a Linux deployment with the **/opt** directory as a Linux enabled shared 
-directory location which can be mapped as a Docker 'volume'.  If you are on MacOS or Windows, you will need to fix 
-this to point to some other location (commented examples are provided in the docker-compose.yml file). After fixing
-the paths in the **docker-compose.yml** file, note that you need to create some additional (empty)subdirectories
-and ensure that the user permissions are set to the user account running the docker-compose.yml file.
-In particular, these subdirectories are:
-
-      /opt/DivSeekCanada/tripal_sites:/var/www/html/sites
-      /opt/DivSeekCanada/tripal_private:/var/www/private
-      /opt/DivSeekCanada/tripal_db:/var/lib/postgresql/data/
-      /opt/DivSeekCanada/tripal_index/:/usr/share/elasticsearch/data
-      /opt/DivSeekCanada/jbrowse/:/data
-
-(substitute the appropriate root path for your OS).
-
-Note that you should ensure that you have a "large enough" storage volume initialized and mounted to your system,
-upon which to store these directories, and also, the Docker deployment in general.  On a cloud deployment, this 
-may mean adding suitable volume storage. Your experience with your data system size will dictate the size of 
-such a volume storage.
-
 ## Running the System
 
 The **docker-compose.yml** file, once configured, may be directly run as follows:
@@ -229,7 +200,7 @@ When hosting on a cloud environment such as the OpenStack cloud at Compute Canad
 By default, the Docker image cache (and other metadata) resides under **/var/lib/docker** which will end up being hosted
 on the root volume of a cloud image, which may be relatively modest in size. To avoid "out of file storage" messages, 
 which related to limits in inode and actual byte storage, it is advised that you remap (and copy the default contents
-of) the **/var/lib/docker** directory onto an extra mounted storage volume (configured to be automounted by _fstab_ 
+of) the **/var/lib/docker** directory onto an extra mounted storage volume (also configured to be automounted by _fstab_ 
 configuration).
 
 ## ElasticSearch

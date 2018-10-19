@@ -1,0 +1,89 @@
+# This is a DivSeek Canada customized version of the docker-tripal
+# sample configuration to run a Tripal instance with Docker-Compose
+#
+# (Meta)Data Persistence
+# ======================
+#
+# NOTE: to allow the Tripal instance to store its (meta)data outside of its running containers,
+# thus assuring persistence between container runs, this docker-compose.yml file configures
+# a series of Docker 'named' "volumes". These are stored under the Docker installation directory.
+#
+# One can use the CLI command:
+#
+#         docker exec -i -t <container_name> /bin/bash
+#
+# to directly log into each container to access data attached to each volume.
+#
+# Later iterations of this project may add additional services to facilitate access to, and backup of, these volumes.
+#
+# Application Port Visibility
+# ===========================
+#
+# We've chosen to map the web sites - core and jbrowse - to TCP/IP ports 8082 and 8084, respectively.
+# These ports are currently not publicly reserved for any other software product in the world.
+#
+version: '3'
+services:
+
+  web:
+    build: .
+    volumes:
+    # External web site volume mappings
+    - tripal_sites:/var/www/html/sites
+    - tripal_private:/var/www/private
+    environment:
+      UPLOAD_LIMIT: 20M
+      MEMORY_LIMIT: 128M
+      BASE_URL: "http://staging.divseekcanada.ca:8082/tripal"
+      BASE_URL_PROTO: "http://"
+      DB_NAME: 'postgres'
+      SITE_NAME: "DivSeek Canada"
+      TRIPAL_ADDITIONAL_MODULES: "bootstrap jquery_update panels tripal_jbrowse"
+      THEME: "bootstrap"
+    ports:
+    - "8082:80"
+    depends_on:
+    - postgres
+    - elasticsearch
+    - jbrowse
+
+  postgres:
+    image: erasche/chado:1.31-jenkins97-pg9.5
+    environment:
+    - POSTGRES_PASSWORD=postgres
+    # The default chado image would try to install the schema on first run,
+    # we just want the tools to be available.
+    - INSTALL_CHADO_SCHEMA=0
+    - INSTALL_YEAST_DATA=0
+    - PGDATA=/var/lib/postgresql/data/
+    volumes:
+    # External Postgresql volume mapping
+    - tripal_db:/var/lib/postgresql/data/
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
+    environment:
+      TAKE_FILE_OWNERSHIP: "true"
+    volumes:
+    # External elastic search index volume mappings
+    - tripal_index:/usr/share/elasticsearch/data
+
+  jbrowse:
+    build: ./docker-jbrowse
+    ports:
+    - "8084:80"
+    #command: /bin/bash -c "exec nginx -g 'daemon off;'"
+    volumes:
+    # External jbrowse volume mapping
+    # NOTE: This first iteration hard codes a connection to the 'example' data in the project
+    #       We actually need to devise a more flexible data loading process here, one in which
+    #       the JBrowse system may start out empty, but have some data loading triggered later
+    #       either in a declarative fashion (by a configuration file) or by a web form request.
+    - ./docker-jbrowse/example/:/data/
+
+volumes:
+  tripal_sites:
+  tripal_private:
+  tripal_db:
+  tripal_index:
+  #tripal_jbrowse:

@@ -1,7 +1,7 @@
 # This is a DivSeek Canada customized version of the docker-tripal sample configuration 
 # to run a Tripal instance with Docker-Compose
 #
-# (Meta)Data Persistance
+# (Meta)Data Persistence
 # ======================
 #
 # NOTE: to allow the Tripal instance to store its (meta)data outside of its running containers, 
