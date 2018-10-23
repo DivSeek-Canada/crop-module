@@ -149,6 +149,14 @@ In this manner, can then log in as the "admin" user then the admin dashboard, e.
 
 to perhaps apply other customizations.
 
+# Implementation of the Plant Breeding Scientific Workflows in Tripal
+
+This project will attempt to document a systematic series of steps for building up a Tripal instance to support plant
+breeding scientific workflows for DivSeek Canada users.  These steps will be documented in a series of instructional
+documents. We will provide a series of links here to these documents as they evolve:
+
+* [Loading Trait Dictionary](docs/1_Load_Trait_Dictionary.md)
+
 # Targets for Customization of a Docker Tripal Installation
 
 A given Docker Compose deployment of Tripal has various levels at which customization may be attempted.
