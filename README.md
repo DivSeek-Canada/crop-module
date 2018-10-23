@@ -132,6 +132,8 @@ To stop the docker system, the following may be run:
 
     docker-compose -f /path/to/the/divseek-canada-portal/docker-compose.yml down
 
+## Logging into the Container
+
 While running, you may directly access and manipulate the running Tripal instance by firing up a bash shell session.
 Assuming that your docker image name is something like _"divseek-canada-portal_web_1"_
 then, you can enter it by:
@@ -139,13 +141,16 @@ then, you can enter it by:
     docker exec -t -i divseek-canada-portal_web_1 /bin/bash
     root@31d29c26c792:/var/www/html#
 
-Once it, you can (for example) change the admin password using 'drush' as follows:
+## Resetting the Administrative Password
+
+One task you can do while logged into the Container is that you can reset the admin password, using 'drush' as follows:
 
     root@31d29c26c792:/var/www/html# drush user-password admin --password="your-new-admin-password"
 
-In this manner, can then log in as the "admin" user then the admin dashboard, e.g.
+In this manner, can then log into the web site (from your web browser) as the "admin" user to access the 
+admin dashboard, i.e.
 
-    http://localhost:3000/tripal/admin
+    http://localhost:8082/tripal/admin
 
 to perhaps apply other customizations.
 
@@ -199,7 +204,7 @@ admin password. I effect, though, any _drush_ command accessible site changes (c
 ## Customize Tripal using the _admin_ Dashboard, accessible through the web site
 
 After setting the **admin** password, the entire Tripal (Drupal) site administration will be accessible at 
-**http://localhost:3000/tripal/admin***, page which provides access to significant global customization options.
+**http://localhost:8082/tripal/admin***, page which provides access to significant global customization options.
  
 # Cloud Deployment
 
@@ -239,4 +244,4 @@ to reload configuration with new value.
 To ensure proper resolution of the Tripal/Drupal site files, you should set some parameters in the **docker-compose.xml** 
 file before running it. For example, the base URL of the site should be set:
 
-    BASE_URL: "http://staging.divseekcanada.ca:3000/tripal"
+    BASE_URL: "http://staging.divseekcanada.ca:8082/tripal"
