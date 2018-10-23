@@ -7,7 +7,13 @@ must be undertaken manually.
 
 # UI Preliminaries
 
-The Bootstrap and Panels modules must be configured as follows...
+The Bootstrap theme styles Panels and Panels organize content. Panels is an interface that can more directly WYSIWYG
+UI look and feel without having to write your own theme. 
+
+That said, they must be configured as follows:
+
+1. Log into an "administrative" account of the site, to see the admin "Dashboard".
+2. then...
 
 # The Data Directory
 
