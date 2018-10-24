@@ -7,3 +7,10 @@ As the DivSeek Canada Portal project evolves, this README file will document wha
 configuration and (meta-)data for loading, to support the user interface and scientific workflows on the site, 
 for the given crop.
 
+## site_config.yml
+
+**Under Construction**
+
+A copy of the _site_config.yml-template_ file should be made into _site_config.yml_ and the resulting file (which will
+be **.gitignored**) should be edited for site-specific needs.  The template file contains inline comments to guide this. 
+
