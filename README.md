@@ -160,11 +160,14 @@ This project will attempt to document a systematic series of steps for building 
 breeding scientific workflows for DivSeek Canada users.  These steps will be documented in a series of instructional
 documents. We will provide a series of links here to these documents as they evolve:
 
+* [Preparing the Site, right before and after the Docker Compose Build](docs/0_Preparing_the_Site.md)
 * [Loading Trait Dictionary](docs/1_Load_Trait_Dictionary.md)
 
 # Targets for Customization of a Docker Tripal Installation
 
-A given Docker Compose deployment of Tripal has various levels at which customization may be attempted.
+**NOTES FOR DEVELOPERS** A given Docker Compose deployment of Tripal has various levels at which customization may be 
+attempted. We brainstorm a list of these here, for consultation by developers who aspire to elaborate the functionality
+of the crop-specific project site docker containers deployed.
 
 ## Customize the 'docker-compose.yml' file
 
