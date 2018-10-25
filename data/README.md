@@ -1,12 +1,22 @@
 # Data Subdirectory
 
+This directory is empty (except for a **.gitignore** file) in the repository but should be populated with crop specific
 data, including trait dictionaries, genomic and mapping data, or directives on where to get such data.
 
-<<<<<<< HEAD
+As the DivSeek Canada Portal project evolves, this README file will document what is needed in terms of site-specific
+configuration and (meta-)data for loading, to support the user interface and scientific workflows on the site, 
+for the given crop.
 
-# Sunflower trait dictionary ontology file
+## site_config.yml
+
+**Under Construction**
+
+A copy of the _site_config.yml-template_ file should be made into _site_config.yml_ and the resulting file (which will
+be **.gitignored**) should be edited for site-specific needs.  The template file contains inline comments to guide this. 
+
+## Sunflower trait dictionary ontology file
 
 Sunflower trait dictionary ontology can be obtained from http://www.cropontology.org/ontology/CO_359/Sunflower (currently offline for refinement). 
 Click "DOWNLOAD" and select to download OBO file in order to load the trait dictionary into Tripal.
-=======
->>>>>>> 1fac3efa2da1fa08f1d4103df430564e9db2e50e
+
+
