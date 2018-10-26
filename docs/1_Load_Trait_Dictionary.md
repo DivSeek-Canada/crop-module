@@ -2,8 +2,6 @@
 
 Trait dictionary ontology can be obtained from **http://www.cropontology.org/ontology/**. Each crop has a Crop Ontology
 identifier which, when added to the path, gives access to the associated trait dictionary as a downloadable file.
-Click **"DOWNLOAD"** on the crop page and select to download the **OBO** formatted file. Save this file inside the
-the **data** subdirectory of your target crop-specific DivSeek Canada Portal ("Portal") deployment project directory.
 
 For the DivSeek Canada pilot project crops - sunflower, lentil and flax -, the following three dictionaries will be 
 available by adding the following suffixes to the base URL **http://www.cropontology.org/ontology/**:
@@ -14,14 +12,21 @@ available by adding the following suffixes to the base URL **http://www.croponto
 
 3. CO_362/Flax (under development)
 
-After the trait dictionary is loaded into the Portal **data** subdirectory, the following steps will load it into the
-system. 
+Once on the Crop Ontology page for the target crop, click **"DOWNLOAD"** button and select the **OBO** formatted file 
+for downloading (see screen capture below). 
+
+![CropOntology Trait Dictionary Download](CropOntology_Trait_Dictionary_Download.png)
+
+Save this file inside the **data** subdirectory of your target crop-specific DivSeek Canada Portal ("Portal") 
+deployment project directory.  After the trait dictionary is loaded into the Portal **data** subdirectory, 
+the following steps will load it into your crop-specific portal. 
 
 ## Loading via the Tripal Dashboard
 
-Trait data loading is not yet fully automated by the Portal Docker Compose build but requires user interaction with 
-the Tripal web site.  Thus, it is assumed that the crop-specific DivSeek Canada Portal Docker containers are running 
-so that the web site is accessible, for the following sequence of "administrative" user initiated operations.
+Trait data loading is not yet fully automated by the Portal Docker Compose build but currently requires user 
+interaction with the Tripal web site.  Thus, it is assumed that the crop-specific DivSeek Canada Portal Docker 
+containers are running so that the web site is accessible, for the following sequence of "administrative" user 
+initiated operations.
 
 1. Ensure that the obtained **.OBO** file file permissions are set to the user account running the loading script.
 2. Log into an "administrative" account of the site, to see the admin panel at the top.
