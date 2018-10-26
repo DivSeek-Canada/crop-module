@@ -1,6 +1,12 @@
 # This is a DivSeek Canada customized version of the docker-tripal
 # sample configuration to run a Tripal instance with Docker-Compose
 #
+# This file is a template intended to be copied into an operational
+# docker-compose.yml file, for crop-specific deployment customization.
+# (NOTE: Please do NOT directly edit this file unless working on
+#  modifications or extensions that add CORE functionality to the Portal
+#  docker-compose build for all crop platforms being deployed.)
+#
 # (Meta)Data Persistence
 # ======================
 #

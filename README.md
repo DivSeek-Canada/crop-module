@@ -119,7 +119,8 @@ by Docker Compose.
 
 ## Running the System
 
-The **docker-compose.yml** file, once configured, may be directly run as follows:
+A **docker-compose.yml-template** file is provided. A copy should be made of this file into **docker-compose.yml**, then
+customized to (crop) site specific needs.  The **docker-compose.yml** build, once configured, may be run as follows:
 
     docker-compose -f /path/to/the/divseek-canada-portal/docker-compose.yml up --build
 

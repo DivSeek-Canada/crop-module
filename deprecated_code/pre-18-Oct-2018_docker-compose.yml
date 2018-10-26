@@ -6,7 +6,7 @@
 #
 # NOTE: to allow the Tripal instance to store its (meta)data outside of its running containers, 
 # thus assuring persistence between container runs, easy external backup and direct programmatic 
-# access, this docker-compose.yml file configures a series of Docker 'bind mounted' "volumes"
+# access, this docker-compose.yml template file configures a series of Docker 'bind mounted' "volumes"
 # of (sub)directories that will serve as such host system locations.
 #
 # Here, we assume here that the existence of a (host-user-owned) /somepath/DivSeekCanada
