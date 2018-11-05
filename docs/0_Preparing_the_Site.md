@@ -16,7 +16,7 @@ crop-specific configuration, meta-data (e.g. ontology) and data in a form to be 
 Note that, normally, such data files should be designated as **.gitignored** (e.g. by file extension exclusion) so that
 they are not committed to the _divseek-canada-portal_ repository.
 
-Specific guidelines on what (meta-)data is expect, will be documented in a [Data README file](data/README.md) situated
+Specific guidelines on what (meta-)data is expect, will be documented in a [Data README file](../data/README.md) situated
 in the subdirectory.
 
 # UI Preliminaries
