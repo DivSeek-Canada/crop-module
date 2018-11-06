@@ -1,1 +1,8 @@
 site_config.yml
+
+# OBO ontology files
+*.obo
+
+# Ignore sequence files
+*.fasta
+
