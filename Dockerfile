@@ -1,4 +1,5 @@
-FROM quay.io/erasche/tripal:v3.x
+FROM quay.io/galaxy-genome-annotation/tripal:master
+
 MAINTAINER Richard Bruskiewich <richard@starinformatics.com>
 
 ADD /config/DivSeekCanadaLogo.png /DivSeekCanadaLogo.png
