@@ -7,10 +7,10 @@
 *.sh text eol=lf
 *.ini text eol=lf
 *.php text eol=lf
-docker-tripal/logrotate.d/* text eol=lf
-docker-tripal/scripts/pre-launch.d/* text eol=lf
-docker-tripal/scripts/setup.d/* text eol=lf
 *.diff text eol=lf
 *.sql text eol=lf
 *.conf text eol=lf
 *.inc text eol=lf
+docker-jbrowse/*.sh text eol=lf
+scripts/pre-launch.d/* text eol=lf
+scripts/setup.d/* text eol=lf
