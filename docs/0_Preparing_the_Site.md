@@ -36,4 +36,6 @@ each of the target UI components (modules or themes).
 The Panels module allows you to structure page layouts of Drupal (hence, also Tripal) UI components in a flexible 
 manner. Panels is a powerful but mildly complex module. Probably the easiest way to learn about how to use it is to 
 consult [a series of Panels tutorial videos](https://www.drupal.org/node/561730#D7) available on the Drupal.org site. 
+The [introductory Panels tutorial video](https://www.youtube.com/watch?v=MTemg8fE9Dw&feature=youtu.be) is especially 
+useful for new users of Panels.
 
