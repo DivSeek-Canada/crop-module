@@ -25,8 +25,15 @@ The "Bootstrap" theme was included with the "Panels" UI module. The Bootstrap th
 content. Panels is an interface that can more directly WYSIWYG UI look and feel without having to write your own theme. 
 
 Although we are working to automate site construction to the fullest extent feasible (using Docker Compose and 
-Tripal/Drupal tools like Drush), there are some UI tasks which must be undertaken manually, as follows:
+Tripal/Drupal tools like Drush), there are some UI tasks which must be undertaken manually. Do do so, one must first
+log into a user account which has "administrative" role permissions, to see the admin "Dashboard" and ensure that the
+required modules and themes are enabled (to the best of our knowledge, such modules should be enabled by the
+docker-compose build, but double check, just in case). Here we provide some pointers on the configuration and use of
+each of the target UI components (modules or themes).
 
-1. Log into an "administrative" account of the site, to see the admin "Dashboard".
-2. then... **TODO** KCB to elaborate this...
+## Panels Configuration and Use
+
+The Panels module allows you to structure page layouts of Drupal (hence, also Tripal) UI components in a flexible 
+manner. Panels is a powerful but mildly complex module. Probably the easiest way to learn about how to use it is to 
+consult [a series of Panels tutorial videos](https://www.drupal.org/node/561730#D7) available on the Drupal.org site. 
 
