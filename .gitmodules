@@ -1,3 +1,0 @@
-[submodule "docker-jbrowse"]
-	path = docker-jbrowse
-	url = https://github.com/galaxy-genome-annotation/docker-jbrowse.git
