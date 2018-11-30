@@ -44,7 +44,7 @@ services:
       BASE_URL_PROTO: "http://"
       DB_NAME: 'postgres'
       SITE_NAME: "DivSeek Canada"
-      TRIPAL_ADDITIONAL_MODULES: "bootstrap jquery_update panels tripal_jbrowse"
+      TRIPAL_ADDITIONAL_MODULES: "bootstrap jquery_update panels tripal_jbrowse webform"
       THEME: "bootstrap"
     ports:
     - "8082:80"
