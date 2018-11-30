@@ -28,7 +28,7 @@ Then, you can clone the project:
     git clone https://github.com/DivSeek-Canada/divseek-canada-portal 
 
 Note that the project contains an embedded git submodule, which is code from the
-[docker-tripal project v3.x branch](https://github.com/erasche/docker-tripal/tree/v3.x). 
+[docker-tripal project v3.x branch](https://github.com/galaxy-genome-annotation/docker-tripal/tree/v3.x). 
 Thus, in addition to git cloning the project, you'll need to initialize the submodule, i.e.
 
     cd divseek-canada-portal
@@ -172,18 +172,18 @@ of the crop-specific project site docker containers deployed.
 
 ## Customize the 'docker-compose.yml' file
 
-The [Docker Tripal project README](https://github.com/erasche/docker-tripal/blob/v3.x/README.md) provides
+The [Docker Tripal project README](https://github.com/galaxy-genome-annotation/docker-tripal/blob/v3.x/README.md) provides
 more details on how to customize your Tripal installation using environment variables and other
 indications within the _docker-compose.yml_ file.
 
 ### Customize the Web Docker Image
 
-The [Docker Tripal project README](https://github.com/erasche/docker-tripal/blob/v3.x/README.md) also suggests, in 
+The [Docker Tripal project README](https://github.com/galaxy-genome-annotation/docker-tripal/blob/v3.x/README.md) also suggests, in 
 particular, that one can run the docker-compose.yml build from a derived version of the standard docker image 
-provided (i.e. _quay.io/erasche/tripal:v3.x_) by building the "web" service component off a Dockerfile which inherits 
+provided (i.e. _quay.io/galaxy-genome-annotation/tripal:v3.x_) by building the "web" service component off a Dockerfile which inherits 
 from the standard image in the usual fashion, using the FROM docker file directive, namely:
 
-    FROM quay.io/erasche/tripal:v3.x
+    FROM quay.io/galaxy-genome-annotation/tripal:v3.x
     # additional RUN, COPY, CMD customizations
 
 ## Customize within the Docker mapped volumes
