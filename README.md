@@ -246,6 +246,10 @@ to reload configuration with new value.
 ## Default Host Name of the Site
 
 To ensure proper resolution of the Tripal/Drupal site files, you should set some parameters in the **docker-compose.xml** 
-file before running it. For example, the base URL of the site should be set:
+file before running it. For example, the base URL of the site should be set to the crop hostname, e.g.:
 
-    BASE_URL: "http://staging.divseekcanada.ca:8082/tripal"
+    BASE_URL: "http://sunflower.divseekcanada.ca/tripal"
+
+Note that if you are accessing the site using SSL, then you also need to set:
+
+    BASE_URL_PROTO: "https://"
