@@ -190,15 +190,16 @@ from the standard image in the usual fashion, using the FROM docker file directi
 
 ### Tripal (Drupal) HTML Site Files
 
-The _divSeek-canada_ project customization of the docker-tripal docker-compose.yml provides external docker *volume* 
-mappings. One of these is to a _"tripal_sites"_ subdirectory within which the Tripal (Drupal) site configuration files 
-are placed. These files may be customized accordingly, either directly or through the Tripal (Drupal) 'admin' dashboard.
+The _divSeek-canada_ project customization of the docker-tripal docker-compose.yml provides Docker *volume* 
+mappings. One of these is to a _"tripal_sites"_ Docker volume within which the Tripal (Drupal) site configuration files 
+are placed. If this volume may be directly accessed to customize the files or the site customized 
+through the Tripal (Drupal) 'admin' dashboard.
 
 ### Tripal (Drupal) PostgreSQL Database
 
 Similarly, _divSeek-canada_ project customization of the docker-tripal docker-compose.yml provides external docker\
-*volume* mappings to a _"tripal_db"_ subdirectory within which the Tripal (Drupal) postgres database files are placed.
-Given suitable postgres credentials, this database may be directly accessed(?) and content modified to project needs.
+*volume* mappings to a _"tripal_db"_ Docker volume within which the Tripal (Drupal) postgres database files are placed.
+Given suitable postgres credentials and access through Docker, the content of this database may be directly modified to project needs.
 
 ## Customize inside the 'web' Docker container using _drush_
 
