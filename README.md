@@ -209,7 +209,8 @@ admin password. I effect, though, any _drush_ command accessible site changes (c
 ## Customize Tripal using the _admin_ Dashboard, accessible through the web site
 
 After setting the **admin** password, the entire Tripal (Drupal) site administration will be accessible at 
-**http://localhost:8082/tripal/admin***, page which provides access to significant global customization options.
+**http://localhost:8082/tripal/admin** page which provides access to significant global customization options.
+(Note: you can change _localhost_ to a _Default Host Name of the Site_ you set, see below)
  
 # Cloud Deployment
 
