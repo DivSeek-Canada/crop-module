@@ -14,28 +14,9 @@ The first iteration of the platform is funded under a
 Some technical notes about the portal system will be compiled on the 
 [Divseek Portal Wiki](https://github.com/DivSeek-Canada/divseek-canada-portal/wiki).
 
-# Working on the Project
+# Docker Deployment of the DivSeek Canada Portal
 
-This project resides in [this Github project repository](https://github.com/DivSeek-Canada/divseek-canada-portal).
-
-First, ensure that you have the git client installed (here again, we assume Ubuntu; '$' is the bash CLI prompt):
-
-    $ apt update
-    $ apt install git
-
-Next, you should configure git with your Git repository metadata and, perhaps, activate credential management (we use 'cache' mode here to avoid storing credentials in plain text on disk)
-
-    $ git config --global user.name "your-git-account"
-    # git config --global user.email "your-email"
-    $ git config --global credential.helper cache
-
-Then, you can clone the project:
-
-    $ git clone https://github.com/DivSeek-Canada/divseek-canada-portal 
-
-# Docker Deployment of Tripal
-
-The DivSeek Canada portal is being designed to run within a **Docker** container when the application is run on a Linux server or virtual machine. Some preparation is required.
+The DivSeek Canada Portal is being designed to run within a **Docker** container when the application is run on a Linux server or virtual machine. Thus, some system preparation to run Docker is required.
 
 ## Installation of Docker
 
@@ -181,9 +162,28 @@ in your **/etc/sysctl.conf** file on the host system and run
 
 to reload configuration with new value.
 
+# Installing the DivSeek Canada Portal codebase
+
+This project resides in [this Github project repository](https://github.com/DivSeek-Canada/divseek-canada-portal).
+
+First, ensure that you have the git client installed (here again, we assume Ubuntu; '$' is the bash CLI prompt):
+
+    $ apt update
+    $ apt install git
+
+Next, you should configure git with your Git repository metadata and, perhaps, activate credential management (we use 'cache' mode here to avoid storing credentials in plain text on disk)
+
+    $ git config --global user.name "your-git-account"
+    # git config --global user.email "your-email"
+    $ git config --global credential.helper cache
+
+Then, you can clone the project:
+
+    $ git clone https://github.com/DivSeek-Canada/divseek-canada-portal 
+
 # Deployment of Tripal using Docker
 
-This project is currently designed to deploy Tripal as a Docker deployment. Thus, once cloned, the project may be built 
+This project is now designed to deploy Tripal as a Docker deployment. Thus, once cloned, the project may be built 
 by Docker Compose. 
 
 ## Running the System
