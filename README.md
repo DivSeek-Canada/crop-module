@@ -31,7 +31,7 @@ Next, you should configure git with your Git repository metadata and, perhaps, a
 
 Then, you can clone the project:
 
-    git clone https://github.com/DivSeek-Canada/divseek-canada-portal 
+    $ git clone https://github.com/DivSeek-Canada/divseek-canada-portal 
 
 # Docker Deployment of Tripal
 
