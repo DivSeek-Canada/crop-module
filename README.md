@@ -14,33 +14,9 @@ The first iteration of the platform is funded under a
 Some technical notes about the portal system will be compiled on the 
 [Divseek Portal Wiki](https://github.com/DivSeek-Canada/divseek-canada-portal/wiki).
 
-# Working on the Project
+# Docker Deployment of the DivSeek Canada Portal
 
-This project resides in [this Github project repository](https://github.com/DivSeek-Canada/divseek-canada-portal).
-
-First, ensure that you have the git client installed (here again, we assume Ubuntu):
-
-    apt update
-    apt install git
-
-Then, you can clone the project:
-
-    git clone https://github.com/DivSeek-Canada/divseek-canada-portal 
-
-Note that the project contains an embedded git submodule, which is code from the
-[docker-tripal project v3.x branch](https://github.com/erasche/docker-tripal/tree/v3.x). 
-Thus, in addition to git cloning the project, you'll need to initialize the submodule, i.e.
-
-    cd divseek-canada-portal
-    git submodule init
-    
-in later iterations, after every pull or checkout of another branch from the remote repo, you should update the submodule, as follows:
-
-    git submodule update
-
-# Docker Deployment of Tripal
-
-The DivSeek Canada portal is being designed to run within a **Docker** container when the application is run on a Linux server or virtual machine. Some preparation is required.
+The DivSeek Canada Portal is being designed to run within a **Docker** container when the application is run on a Linux server or virtual machine. Thus, some system preparation to run Docker is required.
 
 ## Installation of Docker
 
@@ -112,9 +88,102 @@ docker-compose version 1.22.0, build f46880f
 ```
 Note that your particular version and build number may be different than what is shown here. We don't currently expect that docker-compose version differences should have a significant impact on the build, but if in doubt, refer to the release notes of the docker-compose site for advice.
 
+# Configuration for Cloud Deployment
+
+When hosting on a cloud environment such as the OpenStack cloud at Compute Canada, some special configuration is needed.
+
+## Storage for Docker
+
+By default, the Docker image cache (and other metadata) resides under **/var/lib/docker** which will end up being hosted
+on the root volume of a cloud image, which may be relatively modest in size. To avoid "out of file storage" messages, 
+which related to limits in inode and actual byte storage, it is advised that you remap (and copy the default contents
+of) the **/var/lib/docker** directory onto an extra mounted storage volume (also configured to be automounted by _fstab_ 
+configuration).
+
+In Compute Canada, using the OpenStack dashboard, a cloud "Volume" can be created and attached to a running DivSeek Canada Portal
+cloud server instance. After attaching the volume to the instance, the volume is initialized and mounted from within an 
+SSH terminal session, as follows (where '$' is the Linux Bash CLI terminal prompt):
+
+    # Before starting, make sure that the new volume (here, 'vdb') is visible (should be!)
+    $ lsblk
+    NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+    vda     254:0    0  2.2G  0 disk
+    ├─vda1  254:1    0  2.1G  0 part /
+    ├─vda14 254:14   0    4M  0 part
+    └─vda15 254:15   0  106M  0 part /boot/efi
+    vdb     254:16   0  200G  0 disk
+
+    # First, initialize the filing system on the new, empty, raw volume (assumed here to be on /dev/vdb)
+    $ sudo mkfs -t ext4 /dev/vdb 
+    
+    # Next, turn docker off
+    $ sudo systemctl stop docker
+    
+    # Then, temporarily rename the old docker library...
+    $ sudo mv /var/lib/docker /var/lib/docker-original
+    
+    # ... and mount the new volume in its place
+    $ sudo mkdir /var/lib/docker
+    $ sudo mount /dev/vdb /var/lib/docker
+    
+    # The original files should be copied over. 
+    # Doing this (carefully) as 'root' user is easiest
+    $ sudo su
+    root@divseek-canada-portal:/var/lib# cp -R /var/lib/docker-original/* /var/lib/docker
+    root@divseek-canada-portal:/var/lib# exit
+
+    # The resulting subdirectories should be suitably protected
+    $ sudo chmod go-r /var/lib/docker
+    
+    # Restart the docker engine daemon - it should now be storing its files on the new (expanded) volume
+    $ sudo systemctl start docker
+    
+    # Clean up the original folder
+    $ sudo rm -Rf /var/lib/docker-original
+
+## ElasticSearch
+
+During the creation of the ElasticSearch indexing container in the Docker Tripal system, one may run up against another
+resource limit, reported by the following error message:
+
+    max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]
+
+This solution to this is to run the following on the command line of your Linux system hosting docker:
+
+    sudo sysctl -w vm.max_map_count=262144
+
+To make it persistent, you can add this line:
+
+    vm.max_map_count=262144
+
+in your **/etc/sysctl.conf** file on the host system and run
+
+    sudo sysctl -p
+
+to reload configuration with new value.
+
+# Installing the DivSeek Canada Portal codebase
+
+This project resides in [this Github project repository](https://github.com/DivSeek-Canada/divseek-canada-portal).
+
+First, ensure that you have the git client installed (here again, we assume Ubuntu; '$' is the bash CLI prompt):
+
+    $ apt update
+    $ apt install git
+
+Next, you should configure git with your Git repository metadata and, perhaps, activate credential management (we use 'cache' mode here to avoid storing credentials in plain text on disk)
+
+    $ git config --global user.name "your-git-account"
+    # git config --global user.email "your-email"
+    $ git config --global credential.helper cache
+
+Then, you can clone the project:
+
+    $ git clone https://github.com/DivSeek-Canada/divseek-canada-portal 
+
 # Deployment of Tripal using Docker
 
-This project is currently designed to deploy Tripal as a Docker deployment. Thus, once cloned, the project may be built 
+This project is now designed to deploy Tripal as a Docker deployment. Thus, once cloned, the project may be built 
 by Docker Compose. 
 
 ## Running the System
@@ -172,33 +241,34 @@ of the crop-specific project site docker containers deployed.
 
 ## Customize the 'docker-compose.yml' file
 
-The [Docker Tripal project README](https://github.com/erasche/docker-tripal/blob/v3.x/README.md) provides
+The [Docker Tripal project README](https://github.com/galaxy-genome-annotation/docker-tripal/blob/v3.x/README.md) provides
 more details on how to customize your Tripal installation using environment variables and other
 indications within the _docker-compose.yml_ file.
 
 ### Customize the Web Docker Image
 
-The [Docker Tripal project README](https://github.com/erasche/docker-tripal/blob/v3.x/README.md) also suggests, in 
+The [Docker Tripal project README](https://github.com/galaxy-genome-annotation/docker-tripal/blob/v3.x/README.md) also suggests, in 
 particular, that one can run the docker-compose.yml build from a derived version of the standard docker image 
-provided (i.e. _quay.io/erasche/tripal:v3.x_) by building the "web" service component off a Dockerfile which inherits 
+provided (i.e. _quay.io/galaxy-genome-annotation/tripal:v3.x_) by building the "web" service component off a Dockerfile which inherits 
 from the standard image in the usual fashion, using the FROM docker file directive, namely:
 
-    FROM quay.io/erasche/tripal:v3.x
+    FROM quay.io/galaxy-genome-annotation/tripal:v3.x
     # additional RUN, COPY, CMD customizations
 
 ## Customize within the Docker mapped volumes
 
 ### Tripal (Drupal) HTML Site Files
 
-The _divSeek-canada_ project customization of the docker-tripal docker-compose.yml provides external docker *volume* 
-mappings. One of these is to a _"tripal_sites"_ subdirectory within which the Tripal (Drupal) site configuration files 
-are placed. These files may be customized accordingly, either directly or through the Tripal (Drupal) 'admin' dashboard.
+The _divSeek-canada_ project customization of the docker-tripal docker-compose.yml provides Docker *volume* 
+mappings. One of these is to a _"tripal_sites"_ Docker volume within which the Tripal (Drupal) site configuration files 
+are placed. If this volume may be directly accessed to customize the files or the site customized 
+through the Tripal (Drupal) 'admin' dashboard.
 
 ### Tripal (Drupal) PostgreSQL Database
 
 Similarly, _divSeek-canada_ project customization of the docker-tripal docker-compose.yml provides external docker\
-*volume* mappings to a _"tripal_db"_ subdirectory within which the Tripal (Drupal) postgres database files are placed.
-Given suitable postgres credentials, this database may be directly accessed(?) and content modified to project needs.
+*volume* mappings to a _"tripal_db"_ Docker volume within which the Tripal (Drupal) postgres database files are placed.
+Given suitable postgres credentials and access through Docker, the content of this database may be directly modified to project needs.
 
 ## Customize inside the 'web' Docker container using _drush_
 
@@ -208,44 +278,16 @@ admin password. I effect, though, any _drush_ command accessible site changes (c
 ## Customize Tripal using the _admin_ Dashboard, accessible through the web site
 
 After setting the **admin** password, the entire Tripal (Drupal) site administration will be accessible at 
-**http://localhost:8082/tripal/admin***, page which provides access to significant global customization options.
- 
-# Cloud Deployment
-
-When hosting on a cloud environment such as the OpenStack cloud at Compute Canada, some special configuration is needed.
-
-## Storage for Docker
-
-By default, the Docker image cache (and other metadata) resides under **/var/lib/docker** which will end up being hosted
-on the root volume of a cloud image, which may be relatively modest in size. To avoid "out of file storage" messages, 
-which related to limits in inode and actual byte storage, it is advised that you remap (and copy the default contents
-of) the **/var/lib/docker** directory onto an extra mounted storage volume (also configured to be automounted by _fstab_ 
-configuration).
-
-## ElasticSearch
-
-During the creation of the ElasticSearch indexing container in the Docker Tripal system, one may run up against another
-resource limit, reported by the following error message:
-
-    max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]
-
-This solution to this is to run the following on the command line of your Linux system hosting docker:
-
-    sudo sysctl -w vm.max_map_count=262144
-
-To make it persistent, you can add this line:
-
-    vm.max_map_count=262144
-
-in your **/etc/sysctl.conf** file on the host system and run
-
-    sudo sysctl -p
-
-to reload configuration with new value.
+**http://localhost:8082/tripal/admin** page which provides access to significant global customization options.
+(Note: you can change _localhost_ to a _Default Host Name of the Site_ you set, see below)
 
 ## Default Host Name of the Site
 
 To ensure proper resolution of the Tripal/Drupal site files, you should set some parameters in the **docker-compose.xml** 
-file before running it. For example, the base URL of the site should be set:
+file before running it. For example, the base URL of the site should be set to the crop hostname, e.g.:
 
-    BASE_URL: "http://staging.divseekcanada.ca:8082/tripal"
+    BASE_URL: "http://sunflower.divseekcanada.ca/tripal"
+
+Note that if you are accessing the site using SSL, then you also need to set:
+
+    BASE_URL_PROTO: "https://"
