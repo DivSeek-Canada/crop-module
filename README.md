@@ -43,7 +43,7 @@ this latter symbolic link first before installing Docker itself (here we assume 
 running).
 
 In Compute Canada, using the OpenStack dashboard, a cloud "Volume" can be created and attached to a running DivSeek Canada Portal
-cloud server instance. After attaching the volume to the instance, the volume is initialized and mounted from within an 
+cloud server instance. We suggest creating a volume at least 200 GB in size (to allow for significant genomic data storage). After attaching the volume to the instance, the volume is initialized and mounted from within an 
 SSH terminal session, as follows (where '$' is the Linux Bash CLI terminal prompt):
 
     # Before starting, make sure that the new volume (here, 'vdb') is visible (should be!)
