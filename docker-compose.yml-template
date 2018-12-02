@@ -75,7 +75,7 @@ services:
     - tripal_index:/usr/share/elasticsearch/data
 
   jbrowse:
-    build: ./docker-jbrowse
+    image: quay.io/galaxy-genome-annotation/jbrowse
     ports:
     - "8084:80"
     volumes:
