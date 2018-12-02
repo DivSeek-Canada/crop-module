@@ -18,6 +18,52 @@ Some technical notes about the portal system will be compiled on the
 
 The DivSeek Canada Portal is being designed to run within a **Docker** container when the application is run on a Linux server or virtual machine. Thus, some system preparation to run Docker is required.
 
+## Configuration for Cloud Deployment
+
+When hosting Docker and the DivSeek Canada Portal in a cloud environment, such as the OpenStack cloud at Compute Canada, 
+some special configuration is likely needed.
+
+By default, the Docker image cache (and other metadata) resides under **/var/lib/docker** which will end up being hosted
+on the root volume of a cloud image, which may be relatively modest in size. To avoid "out of file storage" messages, 
+which related to limits in inode and actual byte storage, it is advised that you remap (and copy the default contents
+of) the **/var/lib/docker** directory onto an extra mounted storage volume (which should be configured to be 
+automounted by _fstab_ configuration).
+
+In effect, it is generally useful to host the entire portal and its associated docker storage volumes on such a extra mounted volume.
+We generally use the **/opt** subdirectory as the target of the mount, then directly install various code and related subdirectories
+there, including the physical target of a symbolic link to the **/var/lib/docker** subdirectory. You will generally wish to set 
+this latter symbolic link first before installing Docker itself (here we assume that docker has _not_ yet been installed (let alone
+running).
+
+In Compute Canada, using the OpenStack dashboard, a cloud "Volume" can be created and attached to a running DivSeek Canada Portal
+cloud server instance. After attaching the volume to the instance, the volume is initialized and mounted from within an 
+SSH terminal session, as follows (where '$' is the Linux Bash CLI terminal prompt):
+
+    # Before starting, make sure that the new volume (here, 'vdb') is visible (should be!)
+    $ lsblk
+    NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+    vda     254:0    0  2.2G  0 disk
+    ├─vda1  254:1    0  2.1G  0 part /
+    ├─vda14 254:14   0    4M  0 part
+    └─vda15 254:15   0  106M  0 part /boot/efi
+    vdb     254:16   0  200G  0 disk
+
+    # First, initialize the filing system on the new, empty, raw volume (assumed here to be on /dev/vdb)
+    $ sudo mkfs -t ext4 /dev/vdb 
+   
+    # Mount the new volume in its place (we assume that the folder '/opt' already exists)
+    $ sudo mount /dev/vdb /opt
+
+    # Provide a symbolic link to the future home of the docker storage subdirectories
+    $ sudo mkdir /opt/docker
+    $ sudo chmod go-r /opt/docker
+    
+    # It is assumed that /var/lib/docker doesn't already exist. 
+    # Otherwise, you'll need to delete it first, then create the symlink
+    $ sudo ln -s /opt/docker /var/lib  
+    
+Now, you can proceed to install Docker and Docker Compose.
+
 ## Installation of Docker
 
 To run Docker, you'll obviously need to [install Docker first](https://docs.docker.com/engine/installation/) in your target Linux operating environment (bare metal server or virtual machine running Linux).
@@ -87,59 +133,6 @@ $ docker-compose --version
 docker-compose version 1.22.0, build f46880f
 ```
 Note that your particular version and build number may be different than what is shown here. We don't currently expect that docker-compose version differences should have a significant impact on the build, but if in doubt, refer to the release notes of the docker-compose site for advice.
-
-# Configuration for Cloud Deployment
-
-When hosting on a cloud environment such as the OpenStack cloud at Compute Canada, some special configuration is needed.
-
-## Storage for Docker
-
-By default, the Docker image cache (and other metadata) resides under **/var/lib/docker** which will end up being hosted
-on the root volume of a cloud image, which may be relatively modest in size. To avoid "out of file storage" messages, 
-which related to limits in inode and actual byte storage, it is advised that you remap (and copy the default contents
-of) the **/var/lib/docker** directory onto an extra mounted storage volume (also configured to be automounted by _fstab_ 
-configuration).
-
-In Compute Canada, using the OpenStack dashboard, a cloud "Volume" can be created and attached to a running DivSeek Canada Portal
-cloud server instance. After attaching the volume to the instance, the volume is initialized and mounted from within an 
-SSH terminal session, as follows (where '$' is the Linux Bash CLI terminal prompt):
-
-    # Before starting, make sure that the new volume (here, 'vdb') is visible (should be!)
-    $ lsblk
-    NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-    vda     254:0    0  2.2G  0 disk
-    ├─vda1  254:1    0  2.1G  0 part /
-    ├─vda14 254:14   0    4M  0 part
-    └─vda15 254:15   0  106M  0 part /boot/efi
-    vdb     254:16   0  200G  0 disk
-
-    # First, initialize the filing system on the new, empty, raw volume (assumed here to be on /dev/vdb)
-    $ sudo mkfs -t ext4 /dev/vdb 
-    
-    # Next, turn docker off
-    $ sudo systemctl stop docker
-    
-    # Then, temporarily rename the old docker library...
-    $ sudo mv /var/lib/docker /var/lib/docker-original
-    
-    # ... and mount the new volume in its place
-    $ sudo mkdir /var/lib/docker
-    $ sudo mount /dev/vdb /var/lib/docker
-    
-    # The original files should be copied over. 
-    # Doing this (carefully) as 'root' user is easiest
-    $ sudo su
-    root@divseek-canada-portal:/var/lib# cp -R /var/lib/docker-original/* /var/lib/docker
-    root@divseek-canada-portal:/var/lib# exit
-
-    # The resulting subdirectories should be suitably protected
-    $ sudo chmod go-r /var/lib/docker
-    
-    # Restart the docker engine daemon - it should now be storing its files on the new (expanded) volume
-    $ sudo systemctl start docker
-    
-    # Clean up the original folder
-    $ sudo rm -Rf /var/lib/docker-original
 
 ## ElasticSearch
 
