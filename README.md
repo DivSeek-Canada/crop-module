@@ -170,19 +170,29 @@ Next, you should configure git with your Git repository metadata and, perhaps, a
     # git config --global user.email "your-email"
     $ git config --global credential.helper cache
 
-Then, you can clone the project:
+Then, you can clone the project. A convenient location for the code is in a folder under **/opt**:
 
+    $ cd /opt
+    $ sudo mkdir divseekcanada
+    $ sudo chown ubuntu:ubuntu divseekcanada  # ensuring easy $USER access to the code...
+    $ cd divseekcanada
     $ git clone https://github.com/DivSeek-Canada/divseek-canada-portal 
 
 # Deployment of Tripal using Docker
 
-This project is now designed to deploy Tripal as a Docker deployment. Thus, once cloned, the project may be built 
-by Docker Compose. 
+This project is now designed to deploy Tripal as a Docker Compose build and deployment. Thus, once cloned, the project 
+may be built by Docker Compose.
 
-## Running the System
+## Customizing the Site and Build Process
 
 A **docker-compose.yml-template** file is provided. A copy should be made of this file into **docker-compose.yml**, then
-customized to (crop) site specific needs.  The **docker-compose.yml** build, once configured, may be run as follows:
+customized to (crop) site specific needs.
+
+You should also review the **docs** folder for site customization and (meta)data loading setup.
+
+## Building and Running the System
+
+The **docker-compose.yml** build file, once configured, may be run as follows:
 
     docker-compose -f /path/to/the/divseek-canada-portal/docker-compose.yml up --build
 
