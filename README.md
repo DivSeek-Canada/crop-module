@@ -141,7 +141,7 @@ docker-compose version 1.22.0, build f46880f
 ```
 Note that your particular version and build number may be different than what is shown here. We don't currently expect that docker-compose version differences should have a significant impact on the build, but if in doubt, refer to the release notes of the docker-compose site for advice.
 
-## ElasticSearch
+# ElasticSearch
 
 During the creation of the ElasticSearch indexing container in the Docker Tripal system, one may run up against another
 resource limit, reported by the following error message:
@@ -168,8 +168,8 @@ This project resides in [this Github project repository](https://github.com/DivS
 
 First, ensure that you have the git client installed (here again, we assume Ubuntu; '$' is the bash CLI prompt):
 
-    $ apt update
-    $ apt install git
+    $ sudo apt update
+    $ sudo apt install git
 
 Next, you should configure git with your Git repository metadata and, perhaps, activate credential management (we use 'cache' mode here to avoid storing credentials in plain text on disk)
 
