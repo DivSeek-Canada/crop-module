@@ -23,13 +23,20 @@ The DivSeek Canada Portal is being designed to run within a **Docker** container
 When hosting Docker and the DivSeek Canada Portal in a cloud environment, such as the OpenStack cloud at Compute Canada, 
 some special configuration is likely needed.
 
-By default, the Docker image cache (and other metadata) resides under **/var/lib/docker** which will end up being hosted
+### Create the Cloud Instance
+
+We start by creating a persistent _p4-6gb_ (4 core, 6 GB RAM)  flavour of compute instance. The security group should open up 
+the TCP/IP ports exposed by the various docker instances, as specified in the project's docker-compose.yml file.
+
+### Docker Image and Volume Storage
+
+By default, the Docker image/volume cache (and other metadata) resides under **/var/lib/docker** which will end up being hosted
 on the root volume of a cloud image, which may be relatively modest in size. To avoid "out of file storage" messages, 
 which related to limits in inode and actual byte storage, it is advised that you remap (and copy the default contents
 of) the **/var/lib/docker** directory onto an extra mounted storage volume (which should be configured to be 
 automounted by _fstab_ configuration).
 
-In effect, it is generally useful to host the entire portal and its associated docker storage volumes on such a extra mounted volume.
+In effect, it is generally useful to host the entire portal and its associated docker storage volumes on such an extra mounted volume.
 We generally use the **/opt** subdirectory as the target of the mount, then directly install various code and related subdirectories
 there, including the physical target of a symbolic link to the **/var/lib/docker** subdirectory. You will generally wish to set 
 this latter symbolic link first before installing Docker itself (here we assume that docker has _not_ yet been installed (let alone
