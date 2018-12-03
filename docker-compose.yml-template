@@ -86,6 +86,17 @@ services:
     #       either in a declarative fashion (by a configuration file) or by a web form request.
     - ./docker-jbrowse/example/:/data/
 
+
+    # Adopted from https://github.com/galaxy-genome-annotation/dockerized-gmod-deployment
+    # /blob/master/docker-compose.yml, used as CHADO-JBROWSE communication tool
+    chado_jb:
+    image: quay.io/erasche/chado-jbrowse-connector:latest
+    environment:
+      POSTGRES_PASSWORD: postgres
+    depends_on:
+    - postgres
+    - jbrowse
+
 volumes:
   tripal_sites:
   tripal_private:

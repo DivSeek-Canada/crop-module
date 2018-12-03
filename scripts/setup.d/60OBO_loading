@@ -1,0 +1,26 @@
+# This script will initate the loading job of Sunflower Trait dictionary as a *.OBO file.
+
+
+
+: ${OBO_PATH:='/tmp/OBO'}
+
+# Might be feasible to include trait dictionary (maybe using copy instead of wget, which might have 
+# connection issues, etc.)
+
+echo "Downloading sunflower trait dictionary from cropontology.org"
+
+# wget "http://www.cropontology.org/obo/CO_359"  \
+#     -O "${OBO_PATH}/Sunflower_trait_dictionary.obo" 
+# (currently offline for refinement)
+
+#Thus, for now the script will cp the pre-refined OBO from the externally mapped volume 
+
+if [ ! -e /tmp/OBO ]; then
+    mkdir -p /tmp/OBO/
+fi
+
+if [ ! -e /data/CO_359.obo ]; then
+    cp /data/CO_359.obo /tmp/OBO/Sunflower_trait_dictionary.obo
+fi
+
+# 
