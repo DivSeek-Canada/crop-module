@@ -1,4 +1,4 @@
-FROM quay.io/galaxy-genome-annotation/tripal:master
+FROM quay.io/galaxy-genome-annotation/tripal:v3.x
 
 MAINTAINER Richard Bruskiewich <richard@starinformatics.com>
 
