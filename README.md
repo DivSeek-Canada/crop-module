@@ -178,7 +178,31 @@ Then, you can clone the project. A convenient location for the code is in a fold
     $ cd divseekcanada
     $ git clone https://github.com/DivSeek-Canada/divseek-canada-portal 
 
-# Deployment of Tripal using Docker
+# Deployment of the GMOD Application Suite - NEW BUILD
+
+As of December 2018, we are porting the DivSeek Canada Portal over to use the more fully-featured 
+[Dockerized GMOD Stack](https://github.com/galaxy-genome-annotation/dockerized-gmod-deployment). Using the
+docker-compose.yml file available in that project, we have created a customized docker compose build file
+(gmod-docker-compose.yml-template).  This file should be copied then customized for (crop) site specific needs.
+The project launch steps noted in the  [GMOD stack README](./docker-gmod/README.md) are 
+otherwise followed with the revised YML file specified:
+
+
+```console
+$ docker-compose -f gmod-docker-compose.yml pull # Pull all images
+$ docker-compose -f gmod-docker-compose.yml up -d apollo_db tripal_db # Launch the DBs
+```
+
+In a new terminal, in the same folder, run `docker-compose -f gmod-docker-compose.yml logs -f` in order to
+watch what is going on.
+
+```
+$ docker-compose -f gmod-docker-compose.yml  up -d tripal # Wait for tripal to come up and install Chado.
+$ # It takes a few minutes. I believe you'll see an apache error when ready.
+$ docker-compose -f gmod-docker-compose.yml up -d # This will bring up the rest of the services.
+```
+
+# Deployment of Tripal using Docker - LEGACY BUILD
 
 This project is now designed to deploy Tripal as a Docker Compose build and deployment. Thus, once cloned, the project 
 may be built by Docker Compose.
