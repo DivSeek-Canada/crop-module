@@ -1,4 +1,5 @@
-FROM quay.io/galaxy-genome-annotation/tripal:v3.x
+# tripal "master" is now at release 3.x
+FROM quay.io/galaxy-genome-annotation/tripal:master
 
 MAINTAINER Richard Bruskiewich <richard@starinformatics.com>
 

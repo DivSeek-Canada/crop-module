@@ -43,7 +43,7 @@ services:
         - postgraphql
         - pgadmin4
     volumes:
-        - "./docker-gmod/nginx:/etc/nginx/conf.d"
+        - "./docker-gmod/divseek-canada-nginx:/etc/nginx/conf.d"
 
   remoteuser: ## Remote User Proxy for Apollo (based on Galaxy Auth)
     image: "quay.io/erasche/gx-cookie-proxy:latest"
@@ -97,7 +97,7 @@ services:
       WEBAPOLLO_CHADO_DB_PORT: 5432
       WEBAPOLLO_CHADO_DB_NAME: postgres
       # Configure admin user email
-      APOLLO_ADMIN_EMAIL: admin@galaxy.org
+      APOLLO_ADMIN_EMAIL: richard@starinformatics.com
     volumes_from:
         - "galaxy:ro"
 

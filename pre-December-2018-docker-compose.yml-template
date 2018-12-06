@@ -51,8 +51,8 @@ services:
       SITE_NAME: "DivSeek Canada"
       ENABLE_CRON_JOBS: 1
       TRIPAL_DOWNLOAD_MODULES: "bootstrap jquery_update panels advanced_help"
-      TRIPAL_GIT_CLONE_MODULES: "https://github.com/tripal/tripal_jbrowse.git"
-      TRIPAL_ENABLE_MODULES: "bootstrap jquery_update panels advanced_help tripal_jbrowse page_manager tracker forum"
+      TRIPAL_GIT_CLONE_MODULES: "https://github.com/tripal/tripal_jbrowse.git brapi"
+      TRIPAL_ENABLE_MODULES: "bootstrap jquery_update panels advanced_help tripal_jbrowse page_manager tracker forum brapi"
       THEME: "bootstrap"
     ports:
     - "8082:80"
