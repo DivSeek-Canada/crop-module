@@ -197,11 +197,11 @@ services:
       # Development servers may run the system on "localhost" but
       # production platforms will be proxied through a proper hostname in BASE_URL,
       # likely using the  BASE_URL_PROTO: "https://"
-      # BASE_URL: "https://gmod.divseekcanada.ca/tripal"
+      # BASE_URL: "https://gmod.divseekcanada.ca"
       # BASE_URL_PROTO: "https://"
-      BASE_URL: "http://localhost:8200/tripal"
+      BASE_URL: "http://localhost:8200"
       BASE_URL_PROTO: "http://"
-      BASE_URL_PATH: /tripal
+      BASE_URL_PATH: /
       DB_NAME: 'postgres'
       SITE_NAME: "DivSeek Canada"
       ENABLE_CRON_JOBS: 1
