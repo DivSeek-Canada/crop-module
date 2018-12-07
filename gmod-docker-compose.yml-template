@@ -98,7 +98,7 @@ services:
       WEBAPOLLO_CHADO_DB_PORT: 5432
       WEBAPOLLO_CHADO_DB_NAME: postgres
       # Configure admin user email
-      APOLLO_ADMIN_EMAIL: admin@galaxy.org
+      APOLLO_ADMIN_EMAIL: admin@divseekcanada.ca
     volumes_from:
         - "galaxy:ro"
 
