@@ -44,7 +44,7 @@ services:
         - pgadmin4
     volumes:
         # The DivSeek Canada Portal uses a slightly modified NGINX configuration
-        - "./nginx:/etc/nginx/conf.d"
+        - "./divseek-canada-nginx:/etc/nginx/conf.d"
 
   remoteuser: ## Remote User Proxy for Apollo (based on Galaxy Auth)
     image: "quay.io/erasche/gx-cookie-proxy:latest"
