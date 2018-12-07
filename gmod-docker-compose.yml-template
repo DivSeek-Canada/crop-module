@@ -105,6 +105,9 @@ services:
     image: postgres:9.5
     environment:
       POSTGRES_PASSWORD: postgres
+    volumes:
+    # External Postgresql volume mapping
+    - apollo_db:/var/lib/postgresql/data/
 
   postgrest:
     image: quay.io/erasche/postgrest:latest
@@ -243,3 +246,4 @@ volumes:
   tripal_db:
   tripal_index:
   #tripal_jbrowse:
+  apollo_db:
