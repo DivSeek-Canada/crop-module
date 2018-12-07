@@ -43,7 +43,7 @@ services:
         - postgraphql
         - pgadmin4
     volumes:
-        - "./docker-gmod/divseek-canada-nginx:/etc/nginx/conf.d"
+        - "./divseek-canada-nginx:/etc/nginx/conf.d"
 
   remoteuser: ## Remote User Proxy for Apollo (based on Galaxy Auth)
     image: "quay.io/erasche/gx-cookie-proxy:latest"
