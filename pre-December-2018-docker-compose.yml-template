@@ -97,7 +97,7 @@ services:
     #       We actually need to devise a more flexible data loading process here, one in which
     #       the JBrowse system may start out empty, but have some data loading triggered later
     #       either in a declarative fashion (by a configuration file) or by a web form request.
-    - ./docker-jbrowse/example/:/data/
+    - ./data/jbrowse/:/data/
 
 volumes:
   tripal_sites:

@@ -226,6 +226,8 @@ services:
 
   jbrowse:
     image: quay.io/galaxy-genome-annotation/jbrowse:v1.12.5
+    environment:
+      JBROWSE_DATA: "./data/jbrowse"
     volumes_from:
         - "galaxy:ro"
 
