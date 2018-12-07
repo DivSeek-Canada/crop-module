@@ -133,7 +133,7 @@ services:
         - "tripal_db"
 
   postgraphql-refseqs: ## PostGraphQL refseq server (required for JBrowse integration)
-    build: refseqs
+    build: ./docker-gmod/refseqs
     environment:
       PGUSER: postgres
       PGPASSWORD: postgres
