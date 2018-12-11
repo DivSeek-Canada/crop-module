@@ -190,7 +190,7 @@ Then, you can clone the project. A convenient location for the code is in a fold
 As of December 2018, we are porting the DivSeek Canada Portal over to use the more fully-featured 
 [Dockerized GMOD Stack](https://github.com/galaxy-genome-annotation/dockerized-gmod-deployment). Using the
 docker-compose.yml file available in that project, we have created a customized docker compose build file
-(gmod-docker-compose.yml-template).  This file should be copied then customized for (crop) site specific needs.
+(**gmod-docker-compose.yml-template**).  This file should be copied then customized for (crop) site specific needs.
 Here, we assume that the resulting file is called **docker-compose.yml** (the default docker-compose configuration
 file name, which if given, does not have to be provided to the docker-compose CLI program).
 
