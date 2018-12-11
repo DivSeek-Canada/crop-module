@@ -31,12 +31,18 @@
 version: '3'
 services:
 
-  web:
+  tripal: ## Tripal
+    # DivSeek Canada Portal builds a
+    # derivative Docker Tripal image.
+    # see project Dockerfile.
     build: .
+    links:
+      - tripal_db:postgres
+      - elasticsearch:elasticsearch
     volumes:
-    # External web site volume mappings
-    - tripal_sites:/var/www/html/sites
-    - tripal_private:/var/www/private
+      # External web site volume mappings
+      - tripal_sites:/var/www/html/sites
+      - tripal_private:/var/www/private
     environment:
       UPLOAD_LIMIT: 20M
       MEMORY_LIMIT: 128M
@@ -47,6 +53,7 @@ services:
       # BASE_URL_PROTO: "https://"
       BASE_URL: "http://localhost:8200/tripal"
       BASE_URL_PROTO: "http://"
+      BASE_URL_PATH: /tripal
       DB_NAME: 'postgres'
       SITE_NAME: "DivSeek Canada"
       ENABLE_CRON_JOBS: 1
@@ -59,14 +66,12 @@ services:
       TRIPAL_GIT_CLONE_MODULES: "https://github.com/tripal/tripal_jbrowse.git"
       TRIPAL_ENABLE_MODULES: "bootstrap jquery_update panels advanced_help tripal_jbrowse page_manager tracker forum"
       THEME: "bootstrap"
-    ports:
-    - "8082:80"
     depends_on:
-    - postgres
-    - elasticsearch
-    - jbrowse
+      - tripal_db
+      - elasticsearch
+      - jbrowse
 
-  postgres:
+  tripal_db: ## Tripal's Postgres Database
     image: quay.io/galaxy-genome-annotation/chado:1.31-jenkins97-pg9.5
     environment:
     - POSTGRES_PASSWORD=postgres
@@ -77,7 +82,7 @@ services:
     - PGDATA=/var/lib/postgresql/data/
     volumes:
     # External Postgresql volume mapping
-    - tripal_db:/var/lib/postgresql/data/
+    - tripal_data:/var/lib/postgresql/data/
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
@@ -102,6 +107,6 @@ services:
 volumes:
   tripal_sites:
   tripal_private:
-  tripal_db:
+  tripal_data:
   tripal_index:
   #tripal_jbrowse:
