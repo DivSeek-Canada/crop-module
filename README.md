@@ -191,22 +191,25 @@ As of December 2018, we are porting the DivSeek Canada Portal over to use the mo
 [Dockerized GMOD Stack](https://github.com/galaxy-genome-annotation/dockerized-gmod-deployment). Using the
 docker-compose.yml file available in that project, we have created a customized docker compose build file
 (gmod-docker-compose.yml-template).  This file should be copied then customized for (crop) site specific needs.
+Here, we assume that the resulting file is called **docker-compose.yml** (the default docker-compose configuration
+file name, which if given, does not have to be provided to the docker-compose CLI program).
+
 The project launch steps noted in the  [GMOD stack README](./docker-gmod/README.md) are 
 otherwise followed with the revised YML file specified:
 
 
 ```console
-$ docker-compose -f gmod-docker-compose.yml pull # Pull all images
-$ docker-compose -f gmod-docker-compose.yml up -d apollo_db tripal_db # Launch the DBs
+$ docker-compose pull # Pull all images
+$ docker-compose up -d apollo_db tripal_db # Launch the DBs
 ```
 
 In a new terminal, in the same folder, run `docker-compose -f gmod-docker-compose.yml logs -f` in order to
 watch what is going on.
 
 ```
-$ docker-compose -f gmod-docker-compose.yml  up -d tripal # Wait for tripal to come up and install Chado.
+$ docker-compose up -d tripal # Wait for tripal to come up and install Chado.
 $ # It takes a few minutes. I believe you'll see an apache error when ready.
-$ docker-compose -f gmod-docker-compose.yml up -d # This will bring up the rest of the services.
+$ docker-compose up -d # This will bring up the rest of the services.
 ```
 
 # Deployment of Tripal using Docker - LEGACY BUILD
@@ -242,7 +245,7 @@ While running, you may directly access and manipulate the running Tripal instanc
 Assuming that your docker image name is something like _"divseek-canada-portal_web_1"_
 then, you can enter it by:
 
-    docker exec -t -i divseek-canada-portal_web_1 /bin/bash
+    docker exec -t -i divseek-canada-portal_tripal_1 /bin/bash
     root@31d29c26c792:/var/www/html#
 
 ## Resetting the Administrative Password
