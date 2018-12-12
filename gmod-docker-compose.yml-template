@@ -27,7 +27,7 @@ version: '3'
 volumes:
   tripal_sites:
   tripal_private:
-  galaxy:ro
+  galaxy_cfg:
 
 services:
 
@@ -49,14 +49,15 @@ services:
         - postgraphql
         - pgadmin4
     volumes:
-        # The DivSeek Canada Portal uses a slightly modified NGINX configuration
-        - "./divseek-canada-nginx:/etc/nginx/conf.d"
+        # The DivSeek Canada Portal may use a
+        # slightly modified NGINX proxy configuration
+        - "./nginx:/etc/nginx/conf.d"
 
   remoteuser: ## Remote User Proxy for Apollo (based on Galaxy Auth)
     image: "quay.io/erasche/gx-cookie-proxy:latest"
     environment:
       GALAXY_DB_URL: "postgresql://galaxy:galaxy@galaxy:5432/galaxy?client_encoding=utf8&sslmode=disable"
-      GALAXY_SECRET: "0xdeadbeefcafe"
+      GALAXY_SECRET: "0xD1vS33kCanuck"
       GXC_BACKEND_URL: "target:8080"
       GXC_LOGLEVEL: DEBUG
     links:
@@ -64,7 +65,7 @@ services:
       - apollo:target
 
   galaxy: ## Galaxy, yay!
-    image: quay.io/galaxy-genome-annotation/docker-galaxy-annotation:master
+    image:
     environment:
         NONUSE: nodejs,proftp,reports
         GALAXY_LOGGING: full
@@ -75,9 +76,9 @@ services:
         GALAXY_WEBAPOLLO_USER: admin@local.host
         GALAXY_SHARED_DIR: /apollo-data
         GALAXY_JBROWSE_SHARED_DIR: /jbrowse/data
-        GALAXY_ID_SECRET: "0xdeadbeefcafe"
+        GALAXY_ID_SECRET: "0xD1vS33kCanuck"
     volumes:
-        - "./galaxy.ini:/etc/galaxy/galaxy.ini"
+        - galaxy_cfg:/etc/galaxy
 
   apollo: ## Apollo, the genome annotation suite
     image: quay.io/erasche/apollo:remote_user
@@ -104,9 +105,9 @@ services:
       WEBAPOLLO_CHADO_DB_PORT: 5432
       WEBAPOLLO_CHADO_DB_NAME: postgres
       # Configure admin user email
-      APOLLO_ADMIN_EMAIL: admin@divseekcanada.ca
+      APOLLO_ADMIN_EMAIL: richard@starinformatics.com
     volumes:
-        - "galaxy:ro"
+        - galaxy_cfg:/etc/galaxy:ro
 
   apollo_db: ## Apollo's Postgres DB
     image: postgres:9.5
@@ -118,7 +119,7 @@ services:
     links:
       - "tripal_db:db"
     environment:
-      POSTGREST_JWT_SECRET: thisisnotarealsecret
+      POSTGREST_JWT_SECRET: "D1vS33kCanuck"
       POSTGREST_SCHEMA: chado
       PG_PASSWORD: postgres
       PG_DB: postgres
@@ -128,7 +129,7 @@ services:
     environment:
         DB_GRAPHQL_PATH: "/graphql"
         DB_GRAPHIQL_PATH: "/graphiql"
-        PG_SECRET: "deadbeefcafe"
+        PG_SECRET: "D1vS33kCanuck"
         PGUSER: postgres
         PGPASSWORD: postgres
         PGHOST: tripal_db
@@ -233,7 +234,7 @@ services:
   jbrowse:
     image: quay.io/galaxy-genome-annotation/jbrowse:v1.12.5
     volumes:
-        - "galaxy:ro"
+        - galaxy_cfg:/etc/galaxy:ro
 
   jbrowse-graphql:
     image: quay.io/galaxy-genome-annotation/jbrowse:v1.12.5
