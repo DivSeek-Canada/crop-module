@@ -87,7 +87,7 @@ services:
         GALAXY_ID_SECRET: "0xdeadbeefcafe"
     volumes:
         - "./volumes/galaxy:/export"
-        - "./galaxy.ini:/etc/galaxy/galaxy.ini"
+        - "./docker-gmod/galaxy.ini:/etc/galaxy/galaxy.ini"
 
   apollo: ## Apollo, the genome annotation suite
     image: quay.io/erasche/apollo:remote_user
