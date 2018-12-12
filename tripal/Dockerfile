@@ -8,6 +8,4 @@ ADD /config/DivSeekCanadaLogo.png /DivSeekCanadaLogo.png
 # Overlay DivSeek Canada specific installation scripts
 # added to the core docker-tripal start-up scripts in the image
 # to be run in the prescribed order
-ADD /scripts/ /scripts/
-
-CMD ["/entrypoint.sh"]
+ADD /scripts /scripts/
