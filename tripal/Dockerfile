@@ -9,3 +9,4 @@ COPY ../config/DivSeekCanadaLogo.png /DivSeekCanadaLogo.png
 # added to the core docker-tripal start-up scripts in the image
 # to be run in the prescribed order
 ADD ../scripts /scripts/
+
