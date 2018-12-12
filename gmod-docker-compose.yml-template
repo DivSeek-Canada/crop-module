@@ -151,7 +151,7 @@ services:
         - "tripal_db"
 
   postgraphql-refseqs: ## PostGraphQL refseq server (required for JBrowse integration)
-    build: refseqs
+    build: ./docker-gmod/refseqs
     environment:
       PGUSER: postgres
       PGPASSWORD: postgres
@@ -244,4 +244,4 @@ services:
   jbrowse-graphql:
     image: quay.io/galaxy-genome-annotation/jbrowse:v1.12.5
     volumes:
-        - "./jbgraphql:/data"
+        - "./docker-gmod/jbgraphql:/data"
