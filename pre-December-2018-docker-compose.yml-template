@@ -31,31 +31,45 @@
 version: '3'
 services:
 
+  proxy: ## Proxy Image
+    image: nginx:latest
+    ports:
+        - "8200:80"
+    links:
+        #- remoteuser
+        #- apollo
+        #- galaxy
+        - tripal
+        #- ngadmin
+        #- chado_jb
+        #- jbrowse
+        #- jbrowse-graphql
+        #- postgrest
+        #- postgrest_tripal
+        #- postgraphql
+        #- pgadmin4
+    volumes:
+        - "./nginx/tripal-only-default.conf:/etc/nginx/conf.d/default.conf"
+
   tripal: ## Tripal
     # DivSeek Canada Portal builds a
     # derivative Docker Tripal image.
     # see project Dockerfile.
-    build: .
+    build: ./tripal
     links:
       - tripal_db:postgres
       - elasticsearch:elasticsearch
     volumes:
-      # External web site volume mappings
-      - tripal_sites:/var/www/html/sites
-      - tripal_private:/var/www/private
+      - ./volumes/tripal/html:/var/www/html/sites
+      - ./volumes/tripal/private:/var/www/private
     environment:
       UPLOAD_LIMIT: 20M
       MEMORY_LIMIT: 128M
-      # Development servers may run the system on "localhost" but
-      # production platforms will be proxied through a proper hostname in BASE_URL,
-      # likely using the  BASE_URL_PROTO: "https://"
-      # BASE_URL: "https://gmod.divseekcanada.ca/tripal"
-      # BASE_URL_PROTO: "https://"
-      BASE_URL: "http://localhost:8200/tripal"
-      BASE_URL_PROTO: "http://"
+      BASE_URL: "${GMOD_SITE_BASE_URL}/tripal"
+      BASE_URL_PROTO: ${GMOD_SITE_BASE_URL_PROTO}
       BASE_URL_PATH: /tripal
       DB_NAME: 'postgres'
-      SITE_NAME: "DivSeek Canada"
+      SITE_NAME: ${GMOD_SITE_NAME}
       ENABLE_CRON_JOBS: 1
       TRIPAL_DOWNLOAD_MODULES: "bootstrap jquery_update panels advanced_help"
       #
@@ -92,17 +106,17 @@ services:
     # External elastic search index volume mappings
     - tripal_index:/usr/share/elasticsearch/data
 
-  jbrowse:
-    image: quay.io/galaxy-genome-annotation/jbrowse
-    ports:
-    - "8084:80"
-    volumes:
-    # External jbrowse volume mapping
-    # NOTE: This first iteration hard codes a connection to the 'example' data in the project
-    #       We actually need to devise a more flexible data loading process here, one in which
-    #       the JBrowse system may start out empty, but have some data loading triggered later
-    #       either in a declarative fashion (by a configuration file) or by a web form request.
-    - ./data/jbrowse/:/data/
+  #jbrowse:
+  #  image: quay.io/galaxy-genome-annotation/jbrowse
+  #  ports:
+  #  - "8084:80"
+  #  volumes:
+  #  # External jbrowse volume mapping
+  #  # NOTE: This first iteration hard codes a connection to the 'example' data in the project
+  #  #       We actually need to devise a more flexible data loading process here, one in which
+  #  #       the JBrowse system may start out empty, but have some data loading triggered later
+  #  #       either in a declarative fashion (by a configuration file) or by a web form request.
+  #  - ./data/jbrowse/:/data/
 
 volumes:
   tripal_sites:
