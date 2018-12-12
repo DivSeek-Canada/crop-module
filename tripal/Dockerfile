@@ -3,7 +3,7 @@ FROM quay.io/galaxy-genome-annotation/tripal:latest
 
 MAINTAINER Richard Bruskiewich <richard@starinformatics.com>
 
-COPY ../config/DivSeekCanadaLogo.png /DivSeekCanadaLogo.png
+COPY ./DivSeekCanadaLogo.png /DivSeekCanadaLogo.png
 
 # Overlay DivSeek Canada specific installation scripts
 # added to the core docker-tripal start-up scripts in the image
