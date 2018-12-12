@@ -207,7 +207,7 @@ services:
       BASE_URL_PROTO: ${GMOD_SITE_BASE_URL_PROTO}
       BASE_URL_PATH: /tripal
       DB_NAME: 'postgres'
-      SITE_NAME: "DivSeek Canada"
+      SITE_NAME: ${GMOD_SITE_NAME}
       ENABLE_CRON_JOBS: 1
       TRIPAL_DOWNLOAD_MODULES: "bootstrap jquery_update panels advanced_help"
       #
