@@ -172,8 +172,8 @@ services:
     image: quay.io/erasche/chado-jbrowse-connector:latest
     environment:
       POSTGRES_PASSWORD: postgres
-      SITE_PATH: "http://localhost:8200/jbrowse/"
-      JBROWSE: "http://localhost:8200/jbrowse_actual/"
+      SITE_PATH: "${GMOD_SITE_BASE_URL}/jbrowse/"
+      JBROWSE: "${GMOD_SITE_BASE_URL}/jbrowse_actual/"
     links:
       - "tripal_db:db"
 
@@ -203,13 +203,8 @@ services:
     environment:
       UPLOAD_LIMIT: 20M
       MEMORY_LIMIT: 128M
-      # Development servers may run the system on "localhost" but
-      # production platforms will be proxied through a proper hostname in BASE_URL,
-      # likely using the  BASE_URL_PROTO: "https://"
-      # BASE_URL: "https://gmod.divseekcanada.ca/tripal"
-      # BASE_URL_PROTO: "https://"
-      BASE_URL: "http://localhost:8200/tripal"
-      BASE_URL_PROTO: "http://"
+      BASE_URL: "${GMOD_SITE_BASE_URL}/tripal"
+      BASE_URL_PROTO: ${GMOD_SITE_BASE_URL_PROTO}
       BASE_URL_PATH: /tripal
       DB_NAME: 'postgres'
       SITE_NAME: "DivSeek Canada"
