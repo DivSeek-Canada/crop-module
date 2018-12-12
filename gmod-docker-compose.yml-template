@@ -65,7 +65,7 @@ services:
     image: "quay.io/erasche/gx-cookie-proxy:latest"
     environment:
       GALAXY_DB_URL: "postgresql://galaxy:galaxy@galaxy:5432/galaxy?client_encoding=utf8&sslmode=disable"
-      GALAXY_SECRET: "0xdeadbeefcafe"
+      GALAXY_SECRET: "0xD1v533kCanuck"
       GXC_BACKEND_URL: "target:8080"
       GXC_LOGLEVEL: DEBUG
     links:
@@ -84,7 +84,7 @@ services:
         GALAXY_WEBAPOLLO_USER: admin@local.host
         GALAXY_SHARED_DIR: /apollo-data
         GALAXY_JBROWSE_SHARED_DIR: /jbrowse/data
-        GALAXY_ID_SECRET: "0xdeadbeefcafe"
+        GALAXY_ID_SECRET: "0xD1v533kCanuck"
     volumes:
         - "./volumes/galaxy:/export"
         - "./docker-gmod/galaxy.ini:/etc/galaxy/galaxy.ini"
@@ -114,7 +114,7 @@ services:
       WEBAPOLLO_CHADO_DB_PORT: 5432
       WEBAPOLLO_CHADO_DB_NAME: postgres
       # Configure admin user email
-      APOLLO_ADMIN_EMAIL: admin@galaxy.org
+      APOLLO_ADMIN_EMAIL: richard@starinformatics.com
     volumes_from:
         - "galaxy:ro"
 
@@ -140,7 +140,7 @@ services:
     environment:
         DB_GRAPHQL_PATH: "/graphql"
         DB_GRAPHIQL_PATH: "/graphiql"
-        PG_SECRET: "deadbeefcafe"
+        PG_SECRET: "D1v533kCanuck"
         PGUSER: postgres
         PGPASSWORD: postgres
         PGHOST: tripal_db
