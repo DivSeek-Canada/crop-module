@@ -65,7 +65,7 @@ services:
       - apollo:target
 
   galaxy: ## Galaxy, yay!
-    image:
+    build: ./galaxy
     environment:
         NONUSE: nodejs,proftp,reports
         GALAXY_LOGGING: full
@@ -192,7 +192,7 @@ services:
     # DivSeek Canada Portal builds a
     # derivative Docker Tripal image.
     # see project Dockerfile.
-    build: .
+    build: ./tripal
     links:
       - tripal_db:postgres
       - elasticsearch:elasticsearch
