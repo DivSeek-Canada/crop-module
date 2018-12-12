@@ -22,7 +22,13 @@
 #
 # Later iterations of this project may add additional services to facilitate access to, and backup of, these volumes.
 #
-version: '2'
+version: '3'
+
+volumes:
+  tripal_sites:
+  tripal_private:
+  galaxy:ro
+
 services:
 
   proxy: ## Proxy Image
@@ -99,7 +105,7 @@ services:
       WEBAPOLLO_CHADO_DB_NAME: postgres
       # Configure admin user email
       APOLLO_ADMIN_EMAIL: admin@divseekcanada.ca
-    volumes_from:
+    volumes:
         - "galaxy:ro"
 
   apollo_db: ## Apollo's Postgres DB
@@ -226,7 +232,7 @@ services:
 
   jbrowse:
     image: quay.io/galaxy-genome-annotation/jbrowse:v1.12.5
-    volumes_from:
+    volumes:
         - "galaxy:ro"
 
   jbrowse-graphql:
@@ -234,6 +240,3 @@ services:
     volumes:
         - "./docker-gmod/jbgraphql:/data"
 
-volumes:
-  tripal_sites:
-  tripal_private:
