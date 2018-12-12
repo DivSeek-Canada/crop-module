@@ -10,4 +10,4 @@ ADD /config/DivSeekCanadaLogo.png /DivSeekCanadaLogo.png
 # to be run in the prescribed order
 ADD /scripts/ /scripts/
 
-CMD ["/entrypoint.sh"]
+#CMD ["/entrypoint.sh"]
