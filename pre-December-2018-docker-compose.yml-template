@@ -78,12 +78,12 @@ services:
       # TRIPAL_ENABLE_MODULES: "bootstrap jquery_update panels advanced_help tripal_jbrowse page_manager tracker forum brapi"
       #
       TRIPAL_GIT_CLONE_MODULES: "https://github.com/tripal/tripal_jbrowse.git"
-      TRIPAL_ENABLE_MODULES: "bootstrap jquery_update panels advanced_help tripal_jbrowse page_manager tracker forum"
+      TRIPAL_ENABLE_MODULES: "bootstrap jquery_update panels advanced_help page_manager tracker forum"
       THEME: "bootstrap"
     depends_on:
       - tripal_db
       - elasticsearch
-      - jbrowse
+     # - jbrowse
 
   tripal_db: ## Tripal's Postgres Database
     image: quay.io/galaxy-genome-annotation/chado:1.31-jenkins97-pg9.5
@@ -99,7 +99,7 @@ services:
     - tripal_data:/var/lib/postgresql/data/
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.1
     environment:
       TAKE_FILE_OWNERSHIP: "true"
     volumes:
