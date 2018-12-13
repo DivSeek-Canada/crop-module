@@ -1,3 +1,4 @@
+volumes/
 .idea/
 docker-compose.yml
 .env
