@@ -10,3 +10,4 @@ COPY ./DivSeekCanadaLogo.png /DivSeekCanadaLogo.png
 # to be run in the prescribed order
 ADD ./scripts /scripts/
 
+RUN chmod -R +x /scripts/
