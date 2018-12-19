@@ -1,3 +1,6 @@
 [submodule "docker-gmod"]
 	path = docker-gmod
 	url = https://github.com/galaxy-genome-annotation/dockerized-gmod-deployment.git
+[submodule "gx-cookie-proxy"]
+	path = gx-cookie-proxy
+	url = https://github.com/erasche/gx-cookie-proxy.git
