@@ -3,3 +3,5 @@ volumes/
 docker-compose.yml
 .env
 mail/
+volumes/
+
