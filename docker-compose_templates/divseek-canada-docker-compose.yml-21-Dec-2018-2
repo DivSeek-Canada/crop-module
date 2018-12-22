@@ -171,7 +171,7 @@ services:
       UPLOAD_LIMIT: 20M
       MEMORY_LIMIT: 128M
       BASE_URL_PATH: /tripal
-      BASE_URL: "https://staging.sunflower.divseekcanada.ca/tripal"
+      BASE_URL: "https://sunflower.divseekcanada.ca/tripal"
       BASE_URL_PROTO: "https://"
       SITE_NAME: "DivSeek Canada - Sunflower"
 
