@@ -30,7 +30,6 @@
 #
 version: '3'
 volumes:
-  galaxy_cfg:
   galaxy_export:
   apollo_data:
   tripal_data:
@@ -71,7 +70,7 @@ services:
         GALAXY_ID_SECRET: "0xD1vS33kCanuck"
     volumes:
         - "galaxy_export:/export"
-        - "./galaxy/galaxy.ini:/etc/galaxy/galaxy.ini"
+        - "./galaxy:/etc/galaxy"
 
   apollo: ## Apollo, the genome annotation suite
     image: quay.io/erasche/apollo:remote_user
@@ -100,7 +99,7 @@ services:
       # Configure admin user email
       APOLLO_ADMIN_EMAIL: kenneth@starinformatics.com
     volumes:
-        - "galaxy_cfg:/etc/galaxy:ro"
+        - "./galaxy/galaxy.ini:/etc/galaxy:ro"
 
   apollo_db: ## Apollo's Postgres DB
     image: postgres:9.5
@@ -167,7 +166,7 @@ services:
   jbrowse:
     image: quay.io/galaxy-genome-annotation/jbrowse:v1.12.5
     volumes:
-        - "galaxy_cfg:/etc/galaxy:ro"
+        - "./galaxy/galaxy.ini:/etc/galaxy:ro"
 
   jbrowse-graphql:
     image: quay.io/galaxy-genome-annotation/jbrowse:v1.12.5
@@ -262,11 +261,6 @@ services:
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.5.1
-
-  jbrowse:
-    image: quay.io/galaxy-genome-annotation/jbrowse:v1.12.5
-    volumes:
-    - galaxy_cfg:/etc/galaxy:ro
 
   jbrowse-graphql:
     image: quay.io/galaxy-genome-annotation/jbrowse:v1.12.5
