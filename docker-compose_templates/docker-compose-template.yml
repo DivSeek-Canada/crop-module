@@ -231,7 +231,7 @@ services:
       # TRIPAL_ENABLE_MODULES: "bootstrap jquery_update panels advanced_help tripal_jbrowse page_manager tracker forum brapi"
       #
       TRIPAL_GIT_CLONE_MODULES: "https://github.com/tripal/tripal_jbrowse.git"
-      TRIPAL_ENABLE_MODULES: "bootstrap maillog smtp jquery_update panels advanced_help page_manager tracker forum tripal_galaxy"
+      TRIPAL_ENABLE_MODULES: "bootstrap maillog smtp jquery_update panels advanced_help page_manager tracker forum tripal_jbrowse tripal_galaxy"
       THEME: "bootstrap"
     depends_on:
       - chado
