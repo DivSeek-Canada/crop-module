@@ -195,9 +195,7 @@ services:
         - "./nginx:/etc/nginx/conf.d"
 
   tripal: ## Tripal
-    # DivSeek Canada Portal builds a
-    # derivative Docker Tripal image.
-    # see project Dockerfile.
+    # DivSeek Canada Portal builds a derivative Docker Tripal image. See project Dockerfile.
     build: ./tripal
     links:
       - chado:postgres
@@ -233,8 +231,7 @@ services:
     image: quay.io/galaxy-genome-annotation/chado:1.31-jenkins21-pg9.5
     environment:
     - POSTGRES_PASSWORD=postgres
-    # The default chado image would try to install the schema on first run,
-    # we just want the tools to be available.
+    # The default chado image would try to install the schema on first run, we just want the tools to be available.
     # The reason why is because Tripal will install the schema for us, but won't be able to run if there's an existing schema
     - INSTALL_CHADO_SCHEMA=0
     - INSTALL_YEAST_DATA=0
