@@ -32,6 +32,9 @@ version: '3'
 
 services:
 
+  volumes:
+    galaxy_installation:
+
   proxy:
     image: nginx:latest
     ports:
@@ -83,8 +86,8 @@ services:
         GALAXY_JBROWSE_SHARED_DIR: /jbrowse/data
         GALAXY_ID_SECRET: "0xD1vS33kCanuck"
     volumes:
-        - "./volumes/galaxy/export:/export"
-        - "./volumes/galaxy:/etc/galaxy"
+        - "./galaxy/galaxy.ini:/etc/galaxy/galaxy.ini"
+        - "galaxy_installation:/galaxy"
 
   apollo: ## Apollo, the genome annotation suite
     image: quay.io/erasche/apollo:remote_user
@@ -113,7 +116,7 @@ services:
       # Configure admin user email
       APOLLO_ADMIN_EMAIL: richard@starinformatics.com
     volumes:
-        - "./volumes/galaxy:/etc/galaxy:ro"
+        galaxy_installation:
 
   apollo_db: ## Apollo's Postgres DB
     image: postgres:9.5
@@ -237,7 +240,7 @@ services:
   jbrowse:
     image: quay.io/galaxy-genome-annotation/jbrowse:v1.12.5
     volumes:
-      - "./volumes/galaxy:/etc/galaxy:ro"
+      galaxy_installation:
 
   jbrowse-graphql:
     image: quay.io/galaxy-genome-annotation/jbrowse:v1.12.5
