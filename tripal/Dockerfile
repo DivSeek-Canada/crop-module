@@ -5,9 +5,13 @@ FROM quay.io/galaxy-genome-annotation/tripal:latest
 
 MAINTAINER Richard Bruskiewich <richard@starinformatics.com>
 
+# Set user selected admin account name
 ARG DIVSEEK_ADMIN_USER
-# Create custom admin account
 ENV ADMIN_USER $DIVSEEK_ADMIN_USER
+
+# Point to actual Chado database host
+ARG DIVSEEK_DB_HOST
+ENV DB_HOST $DIVSEEK_DB_HOST
 
 COPY ./DivSeekCanadaLogo.* /
 

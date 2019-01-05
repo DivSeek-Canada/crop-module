@@ -183,6 +183,7 @@ services:
       dockerfile: Dockerfile
       args:
         DIVSEEK_ADMIN_USER: "${GMOD_ADMIN_USER}"
+        DIVSEEK_DB_HOST: "chado"
     links:
       - chado:postgres
     volumes:
