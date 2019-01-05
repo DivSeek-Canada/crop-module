@@ -31,10 +31,6 @@
 version: '3'
 volumes:
   galaxy_export:
-  apollo_data:
-  tripal_data:
-  tripal_sites:
-  tripal_private:
 
 services:
 
@@ -66,7 +62,7 @@ services:
       GXC_BACKEND_URL: "target:8080"
       GXC_LOGLEVEL: DEBUG
     links:
-      - galaxy:galaxy
+      - galaxy
       - apollo:target
 
   galaxy: ## Galaxy, yay!
@@ -89,8 +85,8 @@ services:
         GALAXY_JBROWSE_SHARED_DIR: /jbrowse/data
         GALAXY_ID_SECRET: "0xD1vS33kCanuck"
     volumes:
-        - "galaxy_export:/export"
-        - "./galaxy:/etc/galaxy"
+        - "./volumes/galaxy/export:/export"
+        - "./galaxy/galaxy.ini:/etc/galaxy/galaxy.ini"
 
   apollo: ## Apollo, the genome annotation suite
     image: quay.io/erasche/apollo:remote_user
@@ -117,16 +113,16 @@ services:
       WEBAPOLLO_CHADO_DB_PORT: 5432
       WEBAPOLLO_CHADO_DB_NAME: postgres
       # Configure admin user email
-      APOLLO_ADMIN_EMAIL: kenneth@starinformatics.com
+      APOLLO_ADMIN_EMAIL: richard@starinformatics.com
     volumes:
-        - "./galaxy:/etc/galaxy:ro"
+        - "galaxy:ro"
 
   apollo_db: ## Apollo's Postgres DB
     image: postgres:9.5
     environment:
       POSTGRES_PASSWORD: postgres
-    #volumes:
-    #   - "./volumes/apollo:/var/lib/postgresql/data/"
+    volumes:
+       - "./volumes/apollo:/var/lib/postgresql/data/"
 
   postgrest:
     image: quay.io/erasche/postgrest:latest
@@ -183,46 +179,28 @@ services:
     links:
       - "chado:db"
 
-  #jbrowse:
-  #  image: quay.io/galaxy-genome-annotation/jbrowse
-  #  ports:
-  #  - "8084:80"
-  #  volumes:
-  #  # External jbrowse volume mapping
-  #  # NOTE: This first iteration hard codes a connection to the 'example' data in the project
-  #  #       We actually need to devise a more flexible data loading process here, one in which
-  #  #       the JBrowse system may start out empty, but have some data loading triggered later
-  #  #       either in a declarative fashion (by a configuration file) or by a web form request.
-  #  - ./data/jbrowse/:/data/
-
-  jbrowse:
-    image: quay.io/galaxy-genome-annotation/jbrowse:v1.12.5
-    volumes:
-        - "./galaxy:/etc/galaxy:ro"
-
-  jbrowse-graphql:
-    image: quay.io/galaxy-genome-annotation/jbrowse:v1.12.5
-    volumes:
-      - "./docker-gmod/jbgraphql:/data"
-
-  tripal: ## Tripal
-    # DivSeek Canada Portal builds a derivative Docker Tripal image. See project Dockerfile.
-    build: ./tripal
+  tripal:
+    build:
+      context: ./tripal
+      dockerfile: Dockerfile
+      args:
+        DIVSEEK_ADMIN_USER: "${GMOD_ADMIN_USER}"
     links:
       - chado:postgres
-      - elasticsearch:elasticsearch
     volumes:
       - ./volumes/tripal/html:/var/www/html/sites
       - ./volumes/tripal/private:/var/www/private
     environment:
       UPLOAD_LIMIT: 20M
       MEMORY_LIMIT: 128M
+      DB_HOST:  "chado"
+      DB_NAME: "postgres"
+      #
       SITE_NAME: "${GMOD_SITE_NAME}"
-      BASE_URL_PROTO: "${GMOD_SITE_BASE_URL_PROTO}"
-      BASE_URL_PATH:  "${GMOD_SITE_BASE_URL_PATH}"
-      BASE_URL: "${GMOD_SITE_BASE_URL_PROTO}${GMOD_SITE_BASE_HOSTNAME}${GMOD_SITE_BASE_URL_PATH}"
-      DB_NAME:  "postgres"
-      #ENABLE_CRON_JOBS: 1
+      BASE_URL_PROTO: "${GMOD_BASE_URL_PROTO}"
+      BASE_URL_PATH: "${GMOD_BASE_URL_PATH}"
+      BASE_URL: "${GMOD_BASE_URL_PROTO}${GMOD_SITE_BASE_HOSTNAME}${GMOD_BASE_URL_PATH}"
+      #
       TRIPAL_GIT_CLONE_LIBRARIES: "https://github.com/galaxyproject/blend4php.git"
       TRIPAL_DOWNLOAD_MODULES: "bootstrap maillog smtp jquery_update panels advanced_help"
       #
@@ -233,28 +211,39 @@ services:
       TRIPAL_GIT_CLONE_MODULES: "https://github.com/tripal/tripal_jbrowse.git"
       TRIPAL_ENABLE_MODULES: "bootstrap maillog smtp jquery_update panels advanced_help page_manager tracker forum tripal_jbrowse tripal_galaxy"
       THEME: "bootstrap"
+    ports:
+      - "8200:80"
     depends_on:
       - chado
       - elasticsearch
       - jbrowse
 
-  chado: ## Tripal's Postgres Database
+chado:  ## Tripal's Chado Database
     image: quay.io/galaxy-genome-annotation/chado:1.31-jenkins21-pg9.5
     environment:
-    - POSTGRES_PASSWORD=postgres
-    # The default chado image would try to install the schema on first run, we just want the tools to be available.
-    # The reason why is because Tripal will install the schema for us, but won't be able to run if there's an existing schema
-    - INSTALL_CHADO_SCHEMA=0
-    - INSTALL_YEAST_DATA=0
-    - PGDATA=/var/lib/postgresql/data/
+      POSTGRES_PASSWORD: "postgres"
+      # The default chado image would try to install the schema on first run, we just want the tools to be available.
+      # The reason why is because Tripal will install the schema for us, but won't be able to run if there's an existing schema
+      INSTALL_CHADO_SCHEMA: 0
+      INSTALL_YEAST_DATA: 0
+      PGDATA: "/var/lib/postgresql/data/"
     volumes:
-    # External Postgresql volume mapping
-    - tripal_data:/var/lib/postgresql/data/
+      - ./volumes/tripal/db:/var/lib/postgresql/data/
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.5.1
     environment:
       TAKE_FILE_OWNERSHIP: "true"
     volumes:
-    # External elastic search index volume mappings
-    - tripal_index:/usr/share/elasticsearch/data
+      - ./volumes/index:/usr/share/elasticsearch/data
+
+  jbrowse:
+    image: quay.io/galaxy-genome-annotation/jbrowse:v1.12.5
+    volumes:
+      - "galaxy:ro"
+
+  jbrowse-graphql:
+    image: quay.io/galaxy-genome-annotation/jbrowse:v1.12.5
+    volumes:
+      - "./docker-gmod/jbgraphql:/data"
+
