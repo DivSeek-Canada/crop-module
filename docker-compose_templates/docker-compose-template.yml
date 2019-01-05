@@ -64,7 +64,7 @@ services:
       - apollo:target
 
   galaxy: ## Galaxy, yay!
-    build: ./galaxy
+    image: quay.io/galaxy-genome-annotation/docker-galaxy-annotation:master
     environment:
         NONUSE: nodejs,proftp,reports
         GALAXY_CHADO_DBHOST: "chado"
