@@ -19,10 +19,12 @@ COPY ./DivSeekCanadaLogo.* /
 # added to the core docker-tripal start-up scripts in the image
 # to be run in the prescribed order
 COPY ./scripts /scripts/
-# Make sure that all our scripts are executable
-RUN chmod -R +x /scripts/
 
 # Overrides the docker-tripal image CMD entrypoint.sh
 # with a slightly different version here?
 COPY entrypoint.sh  /entrypoint.sh
+
+# Make sure that all our scripts are executable
+RUN chmod -R +x /scripts/ /entrypoint.sh
+
 CMD ["/entrypoint.sh"]
