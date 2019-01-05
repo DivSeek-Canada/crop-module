@@ -30,10 +30,10 @@
 #
 version: '3'
 
-services:
+volumes:
+  galaxy_installation:
 
-  volumes:
-    galaxy_installation:
+services:
 
   proxy:
     image: nginx:latest
