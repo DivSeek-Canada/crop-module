@@ -29,8 +29,6 @@
 # These ports are currently not publicly reserved for any other software product in the world.
 #
 version: '3'
-volumes:
-  galaxy_export:
 
 services:
 
@@ -218,7 +216,7 @@ services:
       - elasticsearch
       - jbrowse
 
-chado:  ## Tripal's Chado Database
+  chado:  ## Tripal's Chado Database
     image: quay.io/galaxy-genome-annotation/chado:1.31-jenkins21-pg9.5
     environment:
       POSTGRES_PASSWORD: "postgres"
