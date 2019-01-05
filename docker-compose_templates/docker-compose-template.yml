@@ -84,7 +84,7 @@ services:
         GALAXY_ID_SECRET: "0xD1vS33kCanuck"
     volumes:
         - "./volumes/galaxy/export:/export"
-        - "./galaxy/galaxy.ini:/etc/galaxy/galaxy.ini"
+        - "./galaxy:/etc/galaxy"
 
   apollo: ## Apollo, the genome annotation suite
     image: quay.io/erasche/apollo:remote_user
@@ -113,7 +113,7 @@ services:
       # Configure admin user email
       APOLLO_ADMIN_EMAIL: richard@starinformatics.com
     volumes:
-        - "galaxy:ro"
+        - "./galaxy:/etc/galaxy"
 
   apollo_db: ## Apollo's Postgres DB
     image: postgres:9.5
@@ -172,8 +172,8 @@ services:
     image: quay.io/erasche/chado-jbrowse-connector:latest
     environment:
       POSTGRES_PASSWORD: postgres
-      SITE_PATH: "${GMOD_SITE_BASE_URL_PROTO}${GMOD_SITE_BASE_HOSTNAME}/jbrowse/"
-      JBROWSE:   "${GMOD_SITE_BASE_URL_PROTO}${GMOD_SITE_BASE_HOSTNAME}/jbrowse_actual/"
+      SITE_PATH: "${GMOD_BASE_URL_PROTO}${GMOD_SITE_BASE_HOSTNAME}/jbrowse/"
+      JBROWSE:   "${GMOD_BASE_URL_PROTO}${GMOD_SITE_BASE_HOSTNAME}/jbrowse_actual/"
     links:
       - "chado:db"
 
@@ -238,7 +238,7 @@ services:
   jbrowse:
     image: quay.io/galaxy-genome-annotation/jbrowse:v1.12.5
     volumes:
-      - "galaxy:ro"
+      - "./galaxy:/etc/galaxy"
 
   jbrowse-graphql:
     image: quay.io/galaxy-genome-annotation/jbrowse:v1.12.5
