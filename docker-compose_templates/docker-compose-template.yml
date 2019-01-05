@@ -210,8 +210,6 @@ services:
       TRIPAL_GIT_CLONE_MODULES: "https://github.com/tripal/tripal_jbrowse.git"
       TRIPAL_ENABLE_MODULES: "bootstrap maillog smtp jquery_update panels advanced_help page_manager tracker forum tripal_jbrowse tripal_galaxy"
       THEME: "bootstrap"
-    ports:
-      - "8200:80"
     depends_on:
       - chado
       - elasticsearch
