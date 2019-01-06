@@ -4,22 +4,10 @@ map $http_upgrade $connection_upgrade {
     ''      close;
 }
 
-# This NGINX configuration for the DivSeek Canada Portal
-# is a modified version of the dockerized-gmod-deployment project version.
 server {
     listen 80;
     server_name  localhost;
-
-    # In DivSeek Canada, we wwap galaxy for tripal for the 'root' URL path spot
-    # location / {
-    location /galaxy {
-        proxy_set_header X-Forwarded-Host        $host;
-        proxy_set_header X-Forwarded-Server      $host;
-        proxy_set_header X-Forwarded-For         $proxy_add_x_forwarded_for;
-
-        proxy_redirect   http://galaxy       http://$host;
-        proxy_pass http://galaxy;
-    }
+    client_max_body_size 200M;
 
     location /apollo {
         proxy_set_header X-Forwarded-Host        $host;
@@ -46,6 +34,15 @@ server {
         proxy_pass       http://apollo:8080/apollo;
 
         proxy_cookie_path ~*^/([^/]*) /apollo_api/$1;
+    }
+
+    location /tripal {
+        proxy_set_header X-Forwarded-Host        $http_host;
+        proxy_set_header X-Forwarded-Server      $host;
+        proxy_set_header X-Forwarded-For         $proxy_add_x_forwarded_for;
+
+        proxy_redirect   http://tripal/tripal      http://$http_host/tripal;
+        proxy_pass       http://tripal/tripal;
     }
 
     location /pgadmin4 {
@@ -137,17 +134,12 @@ server {
         proxy_pass       http://postgraphql-refseqs:5000/;
     }
 
-    # In DivSeek Canada, we swap galaxy for tripal for the 'root' URL path spot
-    # location /tripal {
     location / {
-        proxy_set_header X-Forwarded-Host        $http_host;
+        proxy_set_header X-Forwarded-Host        $host;
         proxy_set_header X-Forwarded-Server      $host;
         proxy_set_header X-Forwarded-For         $proxy_add_x_forwarded_for;
 
-        # in DivSeek Canada Portal, tripal is NOT redirected to the /tripal path
-        # proxy_redirect   http://tripal/tripal  http://$http_host/tripal;
-        # proxy_pass       http://tripal/tripal;
-        proxy_redirect   http://tripal http://$http_host;
-        proxy_pass       http://tripal;
+        proxy_redirect   http://galaxy       http://$host;
+        proxy_pass http://galaxy;
     }
 }

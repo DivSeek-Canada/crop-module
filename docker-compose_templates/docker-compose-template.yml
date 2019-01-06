@@ -67,18 +67,24 @@ services:
     image: quay.io/galaxy-genome-annotation/docker-galaxy-annotation:master
     environment:
         NONUSE: nodejs,proftp,reports
+        PROXY_PREFIX: /galaxy
+        #
         GALAXY_CHADO_DBHOST: "chado"
         GALAXY_CHADO_DBNAME: "postgres"
         GALAXY_CHADO_DBUSER: "postgres"
         GALAXY_CHADO_DBPASS: "postgres"
         GALAXY_CHADO_DBSCHEMA: "chado"
         GALAXY_CHADO_DBPORT: 5432
+        #
         GALAXY_LOGGING: full
+        GALAXY_CONFIG_COOKIE_PATH: /galaxy
         GALAXY_CONFIG_BRAND: "GMOD"
+        #
         GALAXY_WEBAPOLLO_URL: "http://apollo:8080/apollo"
         GALAXY_WEBAPOLLO_EXT_URL: "/apollo"
         GALAXY_WEBAPOLLO_PASSWORD: "password"
         GALAXY_WEBAPOLLO_USER: admin@local.host
+        #
         GALAXY_SHARED_DIR: /apollo-data
         GALAXY_JBROWSE_SHARED_DIR: /jbrowse/data
         GALAXY_ID_SECRET: "0xD1vS33kCanuck"
@@ -112,6 +118,9 @@ services:
       WEBAPOLLO_CHADO_DB_HOST: chado
       WEBAPOLLO_CHADO_DB_PORT: 5432
       WEBAPOLLO_CHADO_DB_NAME: postgres
+      #
+      APOLLO_PATH_PREFIX: "/apollo/"
+      #
       # Configure admin user email
       APOLLO_ADMIN_EMAIL: richard@starinformatics.com
     volumes:
