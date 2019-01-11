@@ -56,9 +56,6 @@ server {
         proxy_redirect   http://remoteuser:5000/apollo      http://$http_host/apollo;
         proxy_pass       http://remoteuser:5000/apollo;
 
-        # Proxy path maybe still needed for DivSeek Canada
-        # Given that our URL's look something like
-        # https://sunflower.divseekcanada.ca
         proxy_cookie_path ~*^/([^/]*) /apollo/$1;
 
         # This Proxy head for DivSeek Canada should perhaps be something like
