@@ -23,6 +23,11 @@ server {
         proxy_pass       http://remoteuser:5000/apollo;
         
         proxy_cookie_path ~*^/([^/]*) /apollo/$1;
+
+        # This Proxy head for DivSeek Canada should perhaps be something like
+        # not sure if the sunflower subdomain is needed here...
+        # proxy_set_header REMOTE_USER $remote_user@sunflower;
+        proxy_set_header REMOTE_USER $remote_user@sunflower.divseekcanada.ca;
     }
 
     location /apollo_api {
@@ -135,11 +140,19 @@ server {
     }
 
     location / {
+
         proxy_set_header X-Forwarded-Host        $host;
         proxy_set_header X-Forwarded-Server      $host;
         proxy_set_header X-Forwarded-For         $proxy_add_x_forwarded_for;
 
         proxy_redirect   http://galaxy       http://$host;
-        proxy_pass http://galaxy;
+        proxy_pass       http://galaxy/;
+
+        proxy_cookie_path ~*^/([^/]*) /galaxy/$1;
+
+        # This Proxy head for DivSeek Canada should perhaps be something like
+        # not sure if the sunflower subdomain is needed here...
+        # proxy_set_header REMOTE_USER $remote_user@sunflower;
+        proxy_set_header REMOTE_USER $remote_user@sunflower.divseekcanada.ca;
     }
 }

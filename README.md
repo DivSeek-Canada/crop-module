@@ -191,7 +191,7 @@ As of December 2018, we are porting the DivSeek Canada Portal over to use the mo
 [Dockerized GMOD Stack](https://github.com/galaxy-genome-annotation/dockerized-gmod-deployment). 
 
 Using the **docker-compose.yml** file available in that project, we created a customized Docker Compose build file
-(**gmod-docker-compose.yml-template**).  This file should be copied then customized for (crop) site specific needs.
+(**docker-compose-template.yml**).  This file should be copied then customized for (crop) site specific needs.
 Here, we assume that the resulting file is called **docker-compose.yml** (the default docker-compose configuration
 file name, which if given, does not have to be provided to the docker-compose CLI program).
 
@@ -199,21 +199,26 @@ In addition, you need to copy the **template.env** into **.env** and, insofar ne
 point to your actual DivSeek Canada Portal site (which is likely crop-specific and has a hostname assigned 
 externally by your DNS and, perhaps, resolved by another web server proxy).
 
-The project launch steps noted in the  [GMOD stack README](./docker-gmod/README.md) are 
+The NGINX proxy is also configured during the docker comopose build using a **default.conf** file in the **nginx**
+subdirectory. The GMOD deployment default is to show 'galaxy' on the hostname resolution but there is an alternate 
+template for a  'galaxy-tripal' swapped proxy. One or the other template (under the **nginx** subdirectory)
+should be copied into **nginx/default.conf**.
+
+The general project launch steps noted in the  [GMOD stack README](./docker-gmod/README.md) are 
 otherwise followed with the revised YML file specified:
 
 ```console
 $ docker-compose pull # Pull all images
-$ docker-compose up -d apollo_db tripal_db # Launch the DBs
+$ docker-compose up -d apollo_db chado # Launch the DBs
 ```
 
 In a new terminal, in the same folder, run `docker-compose -f gmod-docker-compose.yml logs -f` in order to
 watch what is going on.
 
 ```
-$ docker-compose up -d tripal # Wait for tripal to come up and install Chado.
+$ docker-compose up -d --build tripal # Wait for tripal to come up and install Chado.
 $ # It takes a few minutes. I believe you'll see an apache error when ready.
-$ docker-compose up -d # This will bring up the rest of the services.
+$ docker-compose up -d --build # This will bring up the rest of the services.
 ```
 
 # Deployment of Tripal using Docker - LEGACY BUILD
