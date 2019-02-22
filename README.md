@@ -59,7 +59,7 @@ SSH terminal session, as follows (where '$' is the Linux Bash CLI terminal promp
     $ sudo mkfs -t ext4 /dev/vdb 
    
     # Mount the new volume in its place (we assume that the folder '/opt' already exists)
-    $ gitudo mount /dev/vdb /opt
+    $ sudo mount /dev/vdb /opt
 
     # Provide a symbolic link to the future home of the docker storage subdirectories
     $ sudo mkdir /opt/docker
